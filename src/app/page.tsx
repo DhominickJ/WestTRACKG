@@ -1,12 +1,12 @@
 import Image from "next/image";
-import Greet from "../components/greet";
-import Header from "../components/header";
+import Header from "./components/header";
+import RequestBtn from "./components/request";
 
 export default function Home() {
   return (
     <>
       <Header />
-
+      <RequestBtn text={"React Sucks!"} />
       <div>
         <Image
           src="/images/Home_bg.png"

@@ -1,25 +1,16 @@
-function RequestBtn(text: String) {
+interface RequestBtnProps {
+  text: string;
+}
+
+function RequestBtn({ text }: RequestBtnProps) {
   return (
     <button
-      className="Button"
-      style={{ width: 312, height: 60, position: "relative" }}
+      className="btn-floating btn-large waves-effect waves-light bg-red-600"
+      type="button"
     >
-      <p
-        className="RequestADocument"
-        style={{
-          left: 28,
-          top: 14,
-          position: "absolute",
-          textAlign: "center",
-          color: "white",
-          fontSize: 24,
-          fontFamily: "Poppins",
-          fontWeight: "600",
-          wordWrap: "break-word",
-        }}
-      >
-        {text}
-      </p>
+      <p className="text-center text-white left-5 top-5">{text}</p>
     </button>
   );
 }
+
+export default RequestBtn;
