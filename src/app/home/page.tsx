@@ -6,8 +6,16 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Greet />
-      <h1>This is WestTrack Home Directory!</h1>
+
+      <div>
+        <Image
+          src="/images/Home_bg.png"
+          alt="background"
+          layout="responsive"
+          width={1000}
+          height={100}
+        />
+      </div>
     </>
   );
 }
