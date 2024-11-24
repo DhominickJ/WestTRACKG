@@ -173,3 +173,6 @@ dist
 .lockb
 /database
 
+#database
+/database
+

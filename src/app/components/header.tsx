@@ -3,7 +3,7 @@ import Image from "next/image";
 
 function Header() {
   return (
-    <header>
+    <header className="sticky">
       <div className="nav-wrapper">
         <nav className="flex flex-wrap mx-auto justify-between p-4 text-white bg-[#0b5ca6]">
           <div className="brand-logo left">
