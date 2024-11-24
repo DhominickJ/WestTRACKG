@@ -1,7 +1,22 @@
-import Header from "/src/app/components/header";
+import Image from "next/image";
+// import Header from "./components/header";
+// import RequestBtn from "./components/request";
+import { Button } from "@/components/ui/button";
 
-function Home() {
-  return <h1> This is the Home Page!</h1>;
+export default function Home() {
+  return (
+    <>
+      <Header />
+      <RequestBtn text={"React Sucks!"} />
+      <div>
+        <Image
+          src="/images/Home_bg.png"
+          alt="background"
+          layout="responsive"
+          width={1000}
+          height={100}
+        />
+      </div>
+    </>
+  );
 }
-
-export default Home;

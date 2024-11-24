@@ -69,4 +69,12 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* styles/globals.css or equivalent file */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 }

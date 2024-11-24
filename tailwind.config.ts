@@ -10,6 +10,9 @@ export default {
   theme: {
   	extend: {
   		colors: {
+
+			westTrackGray: 'E0E0E0',
+			westTrackWhite: 'F5F5F5',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
