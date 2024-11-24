@@ -2,6 +2,7 @@ import Image from "next/image";
 import Header from "./components/header";
 import RequestBtn from "./components/request";
 import ContentLoader from "./components/content-loader";
+import { checking } from "@/lib/firebase";
 
 export default function Home() {
   return (
@@ -29,6 +30,7 @@ export default function Home() {
         imgSrc=""
         imgPos="left"
       />
+      {checking()}
     </>
   );
 }
