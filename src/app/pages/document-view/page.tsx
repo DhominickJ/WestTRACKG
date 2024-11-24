@@ -1,6 +1,8 @@
 //this page will be used to view the document to be signed by the student
 
 function DocView(){
+    
+
     return(
 
 

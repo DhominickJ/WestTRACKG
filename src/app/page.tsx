@@ -14,7 +14,9 @@ const inter = Poppins({
 export default function LandingPage() {
   return (
   <>
+  <Header />
     <RequestBtn 
+    className=""
       text={"React Sucks!"} />
     <div>
       <Image
