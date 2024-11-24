@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <>
       <Header />
-      <RequestBtn text={"React Sucks!"} />
       <div>
         <Image
           src="/images/Home_bg.png"
