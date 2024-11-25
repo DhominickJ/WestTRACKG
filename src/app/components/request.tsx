@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-function RequestBtn() {
+function RequestBtn( _text: any ) {
   return (
     // <button
     //   className="btn-floating btn-large waves-effect waves-light bg-red-600"
