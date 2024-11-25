@@ -46,7 +46,7 @@ export default function UploadPage() {
         userId: auth.currentUser?.uid || "annoymous",
         fileName: fileName,
         fileType: "application/pdf",
-        fileConent: base64Data,
+        fileContent: base64Data,
         status: "processed",
         createdAt: new Date(),
       });
