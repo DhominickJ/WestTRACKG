@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react";
@@ -10,6 +11,9 @@ function RecentDocuments() {
 
 function Announcements() {
   return <div>Here are the latest announcements...</div>;
+=======
+function Home() {
+  return <h1> This is the Home Page!</h1>;
 }
 
 export default function Home() {

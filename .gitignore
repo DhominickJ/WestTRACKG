@@ -171,4 +171,8 @@ dist
 
 #bun
 .lockb
+/database
+
+#database
+/database
 

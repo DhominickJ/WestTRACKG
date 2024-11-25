@@ -1,10 +1,18 @@
 "use client";
 import { useState } from "react";
+import { auth, db } from "@/lib/firebase";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function UploadPage() {
   const [fileName, setfileName] = useState<string | null>(null);
   const [filePreview, setfilePreview] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  interface Base64Data {
+    base64Data: string;
+    fileName: string;
+  }
 
   // File Selection Handling
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +28,7 @@ export default function UploadPage() {
 
     reader.onload = () => {
       const base64 = reader.result as string; // Converting to String
+      const base64Data = base64.split(",")[1];
       localStorage.setItem("uploadedFile", base64.split(",")[1]);
       localStorage.setItem("uploadedFileName", file.name);
       setfileName(file.name);
@@ -27,6 +36,28 @@ export default function UploadPage() {
       setMessage(`File '${file.name}' saved to localStorage`);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleUploadClick = async ({ base64Data, fileName }: Base64Data) => {
+    setUploading(true);
+
+    try {
+      await addDoc(collection(db, "processing"), {
+        userId: auth.currentUser?.uid || "annoymous",
+        fileName: fileName,
+        fileType: "application/pdf",
+        fileConent: base64Data,
+        status: "processed",
+        createdAt: new Date(),
+      });
+
+      alert("File Uploaded Successfully!");
+    } catch (error) {
+      console.error("Error uploading file: ", error);
+      alert("File Upload Failed!");
+    } finally {
+      setUploading(false);
+    }
   };
 
   // Clearing the LocalStorage of the fileSystem
@@ -62,6 +93,16 @@ export default function UploadPage() {
               />
             </div>
           )}
+          <button
+            onClick={() =>
+              handleUploadClick({
+                base64Data: localStorage.getItem("uploadedFile") || "",
+                fileName: localStorage.getItem("uploadedFileName") || "",
+              })
+            }
+          >
+            Upload PDF
+          </button>
         </>
       )}
       <button onClick={clearStorage} style={{ marginTop: "10px" }}>

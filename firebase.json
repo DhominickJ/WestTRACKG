@@ -1,0 +1,11 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "site": "westtrack",
+    "public": ".next",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
+}
