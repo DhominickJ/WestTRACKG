@@ -1,5 +1,4 @@
-
-"use client"
+"use client";
 
 import { useState } from "react";
 import Header from "../../components/homeHeader";
@@ -11,9 +10,6 @@ function RecentDocuments() {
 
 function Announcements() {
   return <div>Here are the latest announcements...</div>;
-=======
-function Home() {
-  return <h1> This is the Home Page!</h1>;
 }
 
 export default function Home() {
@@ -24,7 +20,9 @@ export default function Home() {
       <Header />
 
       <div className="flex justify-start h-80 w-full bg-homeLightBlueBG bg-opacity-[0.2] p-16 pl-[112px] pt-8">
-        <h1 className="font-bold opacity-[0.70] text-[12px]">Request a New Document</h1>
+        <h1 className="font-bold opacity-[0.70] text-[12px]">
+          Request a New Document
+        </h1>
       </div>
 
       <div className="flex space-x-4 pl-12 pt-8">
