@@ -5,7 +5,7 @@
   },
   "hosting": {
     "site": "westtrack",
-    "public": "public",
+    "public": ".next",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
