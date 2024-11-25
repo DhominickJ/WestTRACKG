@@ -172,8 +172,6 @@ dist
 #bun
 .lockb
 /database
-.lock
+deno.lock
 
-#database
-/database
 
