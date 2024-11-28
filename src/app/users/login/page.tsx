@@ -10,9 +10,9 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithGoogle();
-      console.log("Google user signed in:", result.user);
+      console.log("Google user signed in", result);
     } catch (error) {
-      console.error("Google sign-in error:", error.message);
+      console.error("Google sign-in error:", error);
     }
   };
 
