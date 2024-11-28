@@ -1,6 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  addDoc,
+} from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import {
@@ -93,21 +99,6 @@ const Admin = () => {
     fetchFiles();
   }, [isAdmin]);
 
-  // const downloadFile = ({
-  //   fileName,
-  //   fileContent,
-  // }: {
-  //   fileName: string;
-  //   fileContent: string;
-  // }) => {
-  //   const blob = new Blob([atob(fileContent)], { type: "application/pdf" });
-  //   const link = document.createElement("a");
-  //   link.href = URL.createObjectURL(blob);
-  //   link.download = fileName;
-  //   link.click();
-  //   URL.revokeObjectURL(link.href);
-  // };
-
   const updateFileStatus = async (fileId: string, newStatus: string) => {
     try {
       const fileRef = doc(db, "processing", fileId);
@@ -120,9 +111,15 @@ const Admin = () => {
           claimedBy: auth.currentUser?.email || "Admin",
           claimedAt: new Date().toISOString(),
         };
+        await updateDoc(fileRef, updatedData);
+        await addDoc(collection(db, "finished"), {
+          // Add to the finished transaction collection
+          fileId: fileId,
+          claimedBy: auth.currentUser?.email || "Admin",
+          claimedAt: new Date().toISOString(),
+        });
       }
-
-      await updateDoc(fileRef, updatedData);
+      // Create another update on the file itself to reflect on the database
 
       // Update the state to reflect the changes
       setFiles((prevFiles) =>
