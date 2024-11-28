@@ -13,12 +13,12 @@ interface File {
   id: string;
   fileName: string;
   status: string;
-  fileContent?: string | null;
+  fileContent: string;
   transactionInfo?: {
     claimedBy: string;
     claimedAt: string;
   };
-  userId?: string;
+  userId: string;
 }
 
 const Admin = () => {
@@ -74,11 +74,12 @@ const Admin = () => {
             fileName: data.fileName || "",
             status: data.status || "",
             base64: data.base64 || "",
-            fileContent: data.fileContent || null,
+            fileContent: data.fileContent || "",
             transactionInfo: data.transactionInfo || {
               claimedBy: "",
               claimedAt: "",
             },
+            userId: data.userId ?? "",
           };
         });
         setFiles(fetchedFiles);
@@ -91,10 +92,6 @@ const Admin = () => {
 
     fetchFiles();
   }, [isAdmin]);
-
-  const showFileStatus = (file: File) => {
-    alert(`Current Status: ${file.status}`);
-  };
 
   // const downloadFile = ({
   //   fileName,
@@ -118,7 +115,7 @@ const Admin = () => {
 
       // If the status is "claimed," remove the PDF content
       if (newStatus === "claimed") {
-        updatedData.fileContent = null; // Remove the Base64 content
+        updatedData.fileContent = ""; // Remove the Base64 content
         updatedData.transactionInfo = {
           claimedBy: auth.currentUser?.email || "Admin",
           claimedAt: new Date().toISOString(),
@@ -152,10 +149,13 @@ const Admin = () => {
             <li key={file.id}>
               <strong>{file.fileName}</strong> (Status: {file.status})
               <button onClick={() => downloadFile(file)}>Download</button>
-              <button onClick={() => showFileStatus(file)}>Show Status</button>
+              <button onClick={() => showFileStatus(file.status)}>
+                Show Status
+              </button>
               <select
                 onChange={(e) => updateFileStatus(file.id, e.target.value)}
-                defaultValue=""
+                defaultValue="Select Status"
+                name="fileUpdater"
               >
                 <option value="" disabled>
                   Change Status

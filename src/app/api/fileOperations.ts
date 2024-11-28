@@ -75,6 +75,8 @@ export const useFetchFiles = () => {
 
 export const showFileStatus = (status: string) => {
   alert(`Current Status: ${status}`);
+
+  return status;
 };
 
 // export const downloadFile = (file: File) => {
@@ -130,25 +132,13 @@ export const downloadFile = ({ fileName, fileContent }: File) => {
     // Revoke Object URL
     URL.revokeObjectURL(link.href);
   } catch (error) {
-    console.error("Error decoding Base64 or downloading file:", error.message);
+    if (error instanceof Error) {
+      console.error(
+        "Error decoding Base64 or downloading file:",
+        error.message
+      );
+    } else {
+      console.error("Error decoding Base64 or downloading file:", error);
+    }
   }
 };
-
-// const isValidBase64 = (str: string) => {
-//   const base64Regex =
-//     /^(?:[A-Za-z0-9+\/]{4})*?(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/;
-//   return base64Regex.test(str);
-// };
-
-// const decodeBase64 = (str: string) => {
-//   try {
-//     return atob(str);
-//   } catch (error) {
-//     // Handle padding issues
-//     const paddedStr = str.padEnd(
-//       str.length + ((4 - (str.length % 4)) % 4),
-//       "="
-//     );
-//     return atob(paddedStr);
-//   }
-// };
