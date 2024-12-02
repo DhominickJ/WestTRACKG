@@ -13,7 +13,8 @@ function Announcements() {
 }
 
 export default function Home() {
-  const [activeButton, setActiveButton] = useState<string | null>(null);
+    // Set "Recent Documents" as the default active button
+    const [activeButton, setActiveButton] = useState<string>("Recent Documents");
 
   return (
     <>
@@ -23,6 +24,8 @@ export default function Home() {
         <h1 className="font-bold opacity-[0.70] text-[12px]">
           Request a New Document
         </h1>
+
+        
       </div>
 
       <div className="flex space-x-4 pl-12 pt-8">
