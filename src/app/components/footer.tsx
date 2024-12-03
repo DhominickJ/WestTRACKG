@@ -24,13 +24,14 @@ const Footer = () => {
         {/* Logo and Tagline */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <Image
-            src="./images/logo_icon.png"
+            src="/images/logo_icon.png"
             alt="WestTrack Logo Icon"
             width={40}
             height={40}
+            priority
           />
           <Image
-            src="./images/logo_name.png"
+          src="/images/logo_name.png"
             alt="WestTrack Logo Text"
             width={120}
             height={40}

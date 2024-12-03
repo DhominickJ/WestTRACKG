@@ -122,7 +122,7 @@ export default function Home() {
       {/* Team Section */}
       <TeamSection />
 
-      {/* Footer */}
+      {/* Footer Section */}
       <Footer />
       {checking()}
     </>
