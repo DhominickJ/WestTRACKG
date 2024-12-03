@@ -1,15 +1,23 @@
 "use client";
 
-interface InteractiveButtonProps {
+import { useRouter } from "next/router";
+
+interface RedirectButtonProps {
   text: string;
   isActive: boolean;
-  onClick: () => void;
+  redirectTo: string; // The URL to navigate to
 }
 
-export default function InteractiveButton({ text, isActive, onClick }: InteractiveButtonProps) {
+export default function RedirectButton({ text, isActive, redirectTo }: RedirectButtonProps) {
+  const router = useRouter();
+
+  const handleRedirect = () => {
+    router.push(redirectTo); // Navigate to the specified page
+  };
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleRedirect}
       className={`px-4 py-2 rounded-[50px] transition-colors duration-300 border-[1px] text-[12px] ${
         isActive
           ? "bg-homeLightBlueBG text-white border-transparent" // Active: No visible border
@@ -20,3 +28,5 @@ export default function InteractiveButton({ text, isActive, onClick }: Interacti
     </button>
   );
 }
+
+
