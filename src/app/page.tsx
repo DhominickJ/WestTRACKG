@@ -2,22 +2,22 @@ import Image from "next/image";
 import Header from "./components/header";
 import RequestBtn from "./components/request";
 import ContentLoader from "./components/content-loader";
+import TeamSection from "./components/teamSection"; 
+import LandingSection from "./components/landingSection";
 import { checking } from "@/lib/firebase";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
     <>
       <Header />
-      <RequestBtn/>
-      <div>
-        <Image
-          src="/images/Home_bg.png"
-          alt="background"
-          layout="responsive"
-          width={1000}
-          height={100}
-          />
-      </div>
+      <RequestBtn
+      text="Request a Document"
+      isActive={true}
+      redirectTo="/request-document" // The URL to navigate to
+      />
+      <LandingSection/>
+
       {/* Features Section */}
       <ContentLoader
         header="Fast and Reliable"
@@ -37,8 +37,9 @@ export default function Home() {
         imgSrc="/icons/secure.png"
         imgPos="right"
       />
+
       {/* Trusted Offices Section */}
-      <div style={{ backgroundColor: "#133683", color: "#ffffff", padding: "2rem", height:"700"}}>
+      <div style={{ maxHeight:"700px", backgroundColor: "#133683", color: "#ffffff", padding: "2rem", height:"700"}}>
         <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>
           Trusted by Administrative Offices
         </h2>
@@ -67,7 +68,7 @@ export default function Home() {
       </div>
       
       {/* Testimonial Section */}
-      <div style={{ backgroundColor: "#f9f9f9", padding: "2rem 1rem", textAlign: "center" }}>
+      <div style={{ maxHeight:"700px", backgroundColor: "#f9f9f9", padding: "2rem 1rem", textAlign: "center" }}>
         <h2 style={{ color: "#133683", marginBottom: "1rem" }}>What Users Think</h2>
         <p style={{ marginBottom: "2rem" }}>
           Explore honest reviews and ratings from users who’ve experienced our seamless process firsthand.
@@ -84,7 +85,7 @@ export default function Home() {
           }}
         >
           <Image
-            src="/images/profile_pic.jpg"
+            src="/images/member.png.jpg"
             alt="User Profile"
             width={60}
             height={60}
@@ -106,7 +107,23 @@ export default function Home() {
           </p>
         </div>
       </div>
+      
+      {/* About Section */}
+      <div style={{ maxHeight:"700px", backgroundColor: "#FFD700", padding: "3rem 1rem", textAlign: "center" }}>
+        <h2 style={{ fontWeight: "bold", marginBottom: "1.5rem" }}>About WESTTRACK</h2>
+        <p style={{ maxWidth: "800px", margin: "0 auto", marginBottom: "2rem", lineHeight: "1.5" }}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+        ut labore et dolore magna aliqua. t enim ad minim veniam, quis nostrud exercitation 
+        ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </p>
+      </div>
 
+      
+      {/* Team Section */}
+      <TeamSection />
+
+      {/* Footer */}
+      <Footer />
       {checking()}
     </>
   );
