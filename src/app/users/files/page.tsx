@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs, Timestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
+import { useAuth } from "@clerk/nextjs";
 import { onAuthStateChanged } from "firebase/auth";
 import Image from "next/image";
 
@@ -16,6 +17,7 @@ interface File {
 }
 
 const Files = () => {
+  const { userId: clerkUserId, isLoaded } = useAuth();
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
@@ -25,7 +27,7 @@ const Files = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserId(user.uid);
+        setUserId(clerkUserId ?? null);
       } else {
         setUserId(null);
       }
@@ -33,7 +35,7 @@ const Files = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [clerkUserId]);
 
   // Fetch files once userId is set
   useEffect(() => {

@@ -6,8 +6,9 @@ import Header from "./components/header";
 import RequestBtn from "./components/request";
 import ContentLoader from "./components/content-loader";
 import { checking } from "@/lib/firebase";
+import Head from 'next/head';
 
-export default function LandingPage() {
+export default function LandingPage() {   
 
   // If `checking` is asynchronous, handle it appropriately (e.g., with useEffect).
   // const renderChecking = () => {
