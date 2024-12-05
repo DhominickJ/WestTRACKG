@@ -1,3 +1,5 @@
+// homeButton.tsx
+
 "use client";
 
 import { useRouter } from "next/router";
@@ -5,19 +7,29 @@ import { useRouter } from "next/router";
 interface RedirectButtonProps {
   text: string;
   isActive: boolean;
-  redirectTo: string; // The URL to navigate to
+  redirectTo?: string;
+  onClick?: () => void;
 }
 
-export default function RedirectButton({ text, isActive, redirectTo }: RedirectButtonProps) {
+export default function InteractiveButton({
+  text,
+  isActive,
+  redirectTo,
+  onClick,
+}: RedirectButtonProps) {
   const router = useRouter();
 
-  const handleRedirect = () => {
-    router.push(redirectTo); // Navigate to the specified page
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else if (redirectTo) {
+      router.push(redirectTo);
+    }
   };
 
   return (
     <button
-      onClick={handleRedirect}
+      onClick={handleClick}
       className={`px-4 py-2 rounded-[50px] transition-colors duration-300 border-[1px] text-[12px] ${
         isActive
           ? "bg-homeLightBlueBG text-white border-transparent" // Active: No visible border
@@ -28,5 +40,3 @@ export default function RedirectButton({ text, isActive, redirectTo }: RedirectB
     </button>
   );
 }
-
-

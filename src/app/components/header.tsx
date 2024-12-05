@@ -1,7 +1,15 @@
 import { Bell, UserCircle } from "lucide-react";
 import Image from "next/image";
+//import NotificationPopup from "./components/notificationPopup";
 
 function Header() {
+  //const notifications = [
+  //  { id: 1, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
+  //  { id: 2, text: "Your Requested Document #000759 has now been approved", time: "05:32 PM" },
+ //   { id: 3, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
+ //   { id: 4, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
+  //];
+
   return (
     <header className="sticky">
       <div className="nav-wrapper">

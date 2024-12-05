@@ -6,14 +6,14 @@ const LandingSection = () => {
     <header
       style={{
         position: "relative",
-        height: "700px", // Adjust height as needed
+        height: "700px",
         width: "100%",
         overflow: "hidden",
       }}
     >
       {/* Background Image */}
       <Image
-        src="/images/Home_bg.png" // Ensure this image exists in the /public/images directory
+        src="/images/Home_bg.png"
         alt="Background"
         layout="fill"
         objectFit="cover"

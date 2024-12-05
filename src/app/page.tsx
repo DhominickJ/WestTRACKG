@@ -5,7 +5,7 @@ import ContentLoader from "./components/content-loader";
 import TeamSection from "./components/teamSection"; 
 import LandingSection from "./components/landingSection";
 import { checking } from "@/lib/firebase";
-import Footer from "./components/Footer";
+import Footer from "./components/footer";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       <RequestBtn
       text="Request a Document"
       isActive={true}
-      redirectTo="/request-document" // The URL to navigate to
+      redirectTo="/app/users/home/page" // The URL to navigate to
       />
       <LandingSection/>
 
