@@ -4,19 +4,15 @@ import {
   useFetchFiles,
   showFileStatus,
   downloadFile,
+  useHandleViewDocument,
 } from "@/app/api/fileOperations";
-
-interface File {
-  id: string;
-  fileName: string;
-  fileContent: string;
-  status: string;
-  userId: string;
-}
+import { File } from "@/app/api/fileOperations";
+import { useRouter } from "next/router";
 
 const FetchFiles = () => {
   const { files, loading, userId } = useFetchFiles();
   const [fileStatus, setFileStatus] = useState<{ [key: string]: string }>({});
+  const handleViewDocument = useHandleViewDocument();
 
   useEffect(() => {
     if (files) {
@@ -43,7 +39,18 @@ const FetchFiles = () => {
             {files.map((file) => (
               <li key={file.id}>
                 <strong>{file.fileName}</strong> (Status: {fileStatus[file.id]})
-                <button onClick={() => handleDownload(file)}>Download</button>
+                <button
+                  onClick={() => handleViewDocument(file)}
+                  disabled={file.status === "claimed"}
+                >
+                  View Document
+                </button>
+                <button
+                  onClick={() => handleDownload(file)}
+                  disabled={file.status === "claimed"}
+                >
+                  Download
+                </button>
               </li>
             ))}
           </ul>

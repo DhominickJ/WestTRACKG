@@ -23,14 +23,22 @@ export default function Home() {
         content="Every request goes through a seamless process, giving you updates in real-time – no more endless waiting."
         imgSrc="/icons/paper_fast.png"
         imgPos="right"
+        bgColor="white"
       />
       <ContentLoader
         header="Effortless Experience"
         content="Our system guides your requests from start to finish with clarity and ease – making the process straightforward and stress-free."
-        imgSrc=""
+        imgSrc="/icons/Easy.png"
         imgPos="left"
+        bgColor="[0b5ca6]"
       />
-      {checking()}
+      <ContentLoader
+        header="Protected at Every Step"
+        content="We prioritize your privacy with comprehensive encryption and strict data handling standards."
+        imgSrc="/icons/shield-icon.png"
+        imgPos="right"
+        bgColor="white"
+      />
     </>
   );
 }

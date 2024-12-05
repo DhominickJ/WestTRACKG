@@ -1,16 +1,40 @@
 "use client";
 
 import { signInWithEmail, signInWithGoogle } from "@/app/api/auth";
+import { NextApiRequest, NextApiResponse } from "next";
 import { useState } from "react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [googleUser, setGoogleUser] = useState<any>(null);
+
+  // const fetchData = async (accessToken: string) => {
+  //   if (!accessToken) {
+  //     console.error("Access token is required");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`
+  //     );
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch user information");
+  //     }
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error("Error fetching user information:", error);
+  //   }
+  // };
 
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithGoogle();
       console.log("Google user signed in", result);
+      setGoogleUser(result);
+      alert(`User ${result?.userName} Logged In!`);
     } catch (error) {
       console.error("Google sign-in error:", error);
     }
@@ -50,7 +74,12 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={handleEmailSignIn}>Sign in with Email</button>
+        <button onClick={handleEmailSignIn}>Sign In with Email</button>
+        {googleUser?.photoUrl && (
+          <div>
+            <img src={googleUser.photoUrl} alt="User Photo" />
+          </div>
+        )}
       </div>
     </div>
   );
