@@ -4,7 +4,7 @@
 
 import { File } from "@/app/api/fileOperations";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { getFileById } from "@/app/api/fileOperations";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -119,19 +119,19 @@ function DocView() {
             </div>
           </div>
         </div>
-        {file ? (
-          <div className="flex-grow flex-col w-full mt-[-5]">
-            {/* <h1>{file.fileName}</h1> */}
-            <iframe
-              title="Document Viewer"
-              src={`data:application/pdf;base64,${file.fileContent}`}
-              width="100%"
-              height="600px"
-            />
-          </div>
-        ) : (
-          <p>Loading Document</p>
-        )}
+        <Suspense fallback={<div> Loading... </div>}>
+          {file ? (
+            <div className="flex-grow flex-col w-full mt-[-5]">
+              {/* <h1>{file.fileName}</h1> */}
+              <iframe
+                title="Document Viewer"
+                src={`data:application/pdf;base64,${file?.fileContent || ""}`}
+                width="100%"
+                height="600px"
+              />
+            </div>
+          ) : null}
+        </Suspense>
         <div>
           <div className="w-[15rem] h-[90vh] bg-[#d9d9d9] rounded-lg"></div>
         </div>
