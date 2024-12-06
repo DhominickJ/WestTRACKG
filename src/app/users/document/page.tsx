@@ -16,7 +16,7 @@ import {
   FaUserGraduate,
 } from "react-icons/fa";
 
-function DocView() {
+function DocumentContent() {
   const searchParams = useSearchParams();
   const fileId = searchParams.get("fileId");
   const [file, setFile] = useState<File | null>(null);
@@ -119,19 +119,20 @@ function DocView() {
             </div>
           </div>
         </div>
-        <Suspense fallback={<div> Loading... </div>}>
-          {file ? (
-            <div className="flex-grow flex-col w-full mt-[-5]">
-              {/* <h1>{file.fileName}</h1> */}
+        {
+          <div className="flex-grow flex-col w-full mt-[-5]">
+            {file ? (
               <iframe
                 title="Document Viewer"
                 src={`data:application/pdf;base64,${file?.fileContent || ""}`}
                 width="100%"
                 height="600px"
               />
-            </div>
-          ) : null}
-        </Suspense>
+            ) : (
+              <h2> File Loading! </h2>
+            )}
+          </div>
+        }
         <div>
           <div className="w-[15rem] h-[90vh] bg-[#d9d9d9] rounded-lg"></div>
         </div>
@@ -140,4 +141,10 @@ function DocView() {
   );
 }
 
-export default DocView;
+export default function DocView() {
+  return (
+    <Suspense fallback={<div> Loading... </div>}>
+      <DocumentContent />
+    </Suspense>
+  );
+}
