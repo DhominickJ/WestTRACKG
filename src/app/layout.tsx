@@ -1,7 +1,13 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { ClerkProvider } from "@clerk/nextjs";
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+  useAuth,
+} from "@clerk/nextjs";
+import React from "react";
 import "./globals.css";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "WestTRACK",
@@ -10,9 +16,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <ClerkProvider>
       <html lang="en">
