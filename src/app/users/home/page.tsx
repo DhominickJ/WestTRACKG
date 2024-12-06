@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useAuth } from "@clerk/nextjs";
 import Header from "@/app/components/homeHeader";
 import InteractiveButton from "@/app/components/homeButton";
 import Image from 'next/image';
+import Link from "next/link";
 
 
 function RecentDocuments() {
+
+  //make db req
   return <div>Here are your recent documents...</div>;
+
+
 }
 
 function Announcements() {
@@ -25,7 +33,7 @@ function downloadPdf(fileName: string) {
 
 export default function Home() {
     // Set "Recent Documents" as the default active button
-    const [activeButton, setActiveButton] = useState<string>("Recent Documents");
+    const [activeButton, setActiveButton] = useState<string>("Recent Documents"); 
 
   return (
     <>
@@ -50,22 +58,21 @@ export default function Home() {
           }}
         ></iframe> */}
         <div className="flex flex-row mt-4 justify-evenly ">
+
+          <Link href="/users/upload">
           <div className="first w-[180px] mt-2 justify-center align-middle"> {/* Set a fixed width for the container */}
             <Image 
               src="/pdf_templates/StudentOrganizations/Application for Approval-Accreditation of Student Organizations.png"
               alt="Add File"
               width={130}
               height={10}
-              onClick={() => {
-                downloadPdf("/pdf_templates/StudentOrganizations/Application for Approval-Accreditation of Student Organizations.pdf");
-                alert("Downloaded File");
-              }}
               className="cursor-pointer"
             />
             <p className="mt-3 text-[12px] truncate"> {/* 'truncate' class will apply the necessary styles */}
               Add File
             </p>
           </div>
+              </Link>
 
           <div className="second w-[180px] mt-2 justify-center align-middle"> {/* Set a fixed width for the container */}
             <Image 
@@ -152,21 +159,36 @@ export default function Home() {
         
       </div>
 
-      <div className="flex space-x-4 pl-12 pt-8">
-        {/* Button 1: Recent Documents */}
-        <InteractiveButton
-          text="Recent Documents"
-          isActive={activeButton === "Recent Documents"}
-          onClick={() => setActiveButton("Recent Documents")}
-        />
+      <div className="flex pl-12 pt-8 items-center">
+        {/* Left-aligned Buttons */}
+        <div className="flex space-x-4">
+          {/* Button 1: Recent Documents */}
+          <InteractiveButton
+            text="Recent Documents"
+            isActive={activeButton === "Recent Documents"}
+            onClick={() => setActiveButton("Recent Documents")}
+          />
 
-        {/* Button 2: Announcements */}
-        <InteractiveButton
-          text="Announcements"
-          isActive={activeButton === "Announcements"}
-          onClick={() => setActiveButton("Announcements")}
-        />
+          {/* Button 2: Announcements */}
+          <InteractiveButton
+            text="Announcements"
+            isActive={activeButton === "Announcements"}
+            onClick={() => setActiveButton("Announcements")}
+          />
+        </div>
+
+        {/* Button 3 - Files Route */}
+        <Link href="/users/files" className="ml-auto mr-10">
+          <Image 
+            src={"/images/Folder.svg"}
+            alt={"Folder Icon"}
+            width={30}
+            height={30}
+            className="cursor-pointer"
+          />
+        </Link>
       </div>
+
 
       <div className="p-8 ml-5">
         {/* Render different components based on the active button */}
