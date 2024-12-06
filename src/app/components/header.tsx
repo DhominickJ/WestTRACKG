@@ -1,7 +1,15 @@
 import { Bell, UserCircle } from "lucide-react";
 import Image from "next/image";
+//import NotificationPopup from "./components/notificationPopup";
 
-function Header( _type: any ) {
+function Header() {
+  //const notifications = [
+  //  { id: 1, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
+  //  { id: 2, text: "Your Requested Document #000759 has now been approved", time: "05:32 PM" },
+  //   { id: 3, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
+  //   { id: 4, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
+  //];
+
   return (
     <header>
       <div className="nav-wrapper h-12">
@@ -15,16 +23,14 @@ function Header( _type: any ) {
               color="#f5f5f"
             />
           </div>
-          <div className="mt-[-4px]">
           <ul className="left hide-on-med-and-down flex">
             <li className="mr-5">
-              <Bell size={28} color="#f5f5f5" />
+              <Bell size={32} />
             </li>
             <li className="mr-5">
-              <UserCircle size={28} color="#f5f5f5"/>
+              <UserCircle size={32} />
             </li>
           </ul>
-          </div>
         </nav>
       </div>
     </header>
