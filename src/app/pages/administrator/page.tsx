@@ -147,11 +147,7 @@ export const Admin = () => {
           {files.map((file) => (
             <li key={file.id}>
               <strong>{file.fileName}</strong> (Status: {file.status})
-              <button
-                onClick={() => downloadFile(file.fileName, file.fileContent)}
-              >
-                Download
-              </button>
+              <button onClick={() => downloadFile(file)}>Download</button>
               <button onClick={() => showFileStatus(file)}>Show Status</button>
               <select
                 onChange={(e) => updateFileStatus(file.id, e.target.value)}
