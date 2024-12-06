@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
-import { auth, db } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { useAuth } from "@clerk/nextjs";
 
 export default function UploadPage() {
-  const [fileName, setfileName] = useState<string | null>(null);
-  const [filePreview, setfilePreview] = useState<string | null>(null);
+  const { userId, isLoaded } = useAuth(); // Clerk's useAuth hook for userId
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -29,21 +31,26 @@ export default function UploadPage() {
     reader.onload = () => {
       const base64 = reader.result as string; // Converting to String
       const base64Data = base64.split(",")[1];
-      localStorage.setItem("uploadedFile", base64.split(",")[1]);
+      localStorage.setItem("uploadedFile", base64Data);
       localStorage.setItem("uploadedFileName", file.name);
-      setfileName(file.name);
-      setfilePreview(base64);
+      setFileName(file.name);
+      setFilePreview(base64);
       setMessage(`File '${file.name}' saved to localStorage`);
     };
     reader.readAsDataURL(file);
   };
 
   const handleUploadClick = async ({ base64Data, fileName }: Base64Data) => {
+    if (!isLoaded || !userId) {
+      setMessage("User not authenticated. Please log in.");
+      return;
+    }
+
     setUploading(true);
 
     try {
       await addDoc(collection(db, "processing"), {
-        userId: auth.currentUser?.uid || "annoymous",
+        userId: userId, // Clerk's authenticated userId
         fileName: fileName,
         fileType: "application/pdf",
         fileContent: base64Data,
@@ -60,12 +67,12 @@ export default function UploadPage() {
     }
   };
 
-  // Clearing the LocalStorage of the fileSystem
+  // Clearing the LocalStorage of the file system
   const clearStorage = () => {
     localStorage.removeItem("uploadedFile");
     localStorage.removeItem("uploadedFileName");
-    setfileName(null);
-    setfilePreview(null);
+    setFileName(null);
+    setFilePreview(null);
     setMessage("Cleared PDF!");
   };
 
@@ -100,8 +107,9 @@ export default function UploadPage() {
                 fileName: localStorage.getItem("uploadedFileName") || "",
               })
             }
+            disabled={uploading}
           >
-            Upload PDF
+            {uploading ? "Uploading..." : "Upload PDF"}
           </button>
         </>
       )}
