@@ -6,7 +6,7 @@ import { SignUp } from "@clerk/nextjs";
 import { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import {
-  NotificationPopup,
+  notificationPopup,
   LoginNotificationPop,
 } from "@/app/components/notificationPopup";
 
