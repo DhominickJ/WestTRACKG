@@ -3,9 +3,41 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { SignUp } from "@clerk/nextjs";
+import { useState } from "react";
+import { useSignUp } from "@clerk/nextjs";
+import {
+  NotificationPopup,
+  LoginNotificationPop,
+} from "@/app/components/notificationPopup";
 
 function SignUpPage() {
   const router = useRouter();
+
+  const { signUp } = useSignUp();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (signUp) {
+        await signUp.create({
+          firstName,
+          lastName,
+          emailAddress: email,
+          password,
+        });
+        LoginNotificationPop;
+      } else {
+        console.error("signUp is undefined");
+      }
+      router.push("/sign-in");
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
+  };
 
   return (
     <div
@@ -34,17 +66,21 @@ function SignUpPage() {
           <h3 className="text-2xl font-bold mb-6 mt-10 text-gray-700">
             Create a new account
           </h3>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex mb-4">
               <input
                 type="text"
                 placeholder="First Name"
-                className="flex-1 p-3 mr-2 border border-gray-300 rounded text-black"
+                className="flex w-1/2 p-3 mr-2 border border-gray-300 rounded text-black"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
               <input
                 type="text"
                 placeholder="Last Name"
-                className="flex-1 p-3 border border-gray-300 rounded text-black"
+                className="w-1/2 p-3 border border-gray-300 rounded text-black"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -52,6 +88,8 @@ function SignUpPage() {
                 type="email"
                 placeholder="Email Address"
                 className="w-full p-3 border border-gray-300 rounded text-black"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="mb-6">
@@ -59,11 +97,16 @@ function SignUpPage() {
                 type="password"
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded text-black"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <button
               type="submit"
               className="w-full bg-yellow-500 text-black font-semibold py-3 rounded shadow-lg transition duration-300 hover:bg-yellow-600"
+              onClick={() => {
+                handleSubmit;
+              }}
             >
               Create Account
             </button>

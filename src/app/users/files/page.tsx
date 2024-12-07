@@ -110,7 +110,7 @@ const Files = () => {
                         {file.id}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {file.fileName}
+                        <a>{file.fileName}</a>
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
                         {file.date.toLocaleDateString()}

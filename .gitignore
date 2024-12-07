@@ -173,5 +173,6 @@ dist
 .lockb
 /database
 deno.lock
+bun.lockb
 
 
