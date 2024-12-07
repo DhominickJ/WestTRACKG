@@ -123,7 +123,7 @@ export default function UploadPage() {
   // );
 
   return (
-    <div className="flex flex-row items-center justify-center min-h-screen py-2 bg-gray-100">
+    <div className="flex flex-row items-center justify-center min-h-screen py-2 bg-gray-100 sm:text-sm transition duration-500 ease-in-out transform hover:scale-102">
       <div className="w-full max-w-md p-8 space-y-6 bg-homeLightBlueBG rounded shadow-md text-white">
         <h1 className="text-2xl font-bold text-center">Ready to Upload!</h1>
         <label
@@ -136,8 +136,9 @@ export default function UploadPage() {
         <input
           id="fileUpload"
           type="file"
+          accept="application/pdf"
           onChange={handleFileChange}
-          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-500 ease-in-out transform hover:scale-105"
         />
         {fileName && (
           <>
@@ -163,7 +164,7 @@ export default function UploadPage() {
         )}
         <button
           onClick={clearStorage}
-          className="w-full px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 flex items-center justify-center"
+          className="w-full px-4 py-2 text-white bg-destructive rounded-md hover:bg-red-700 flex items-center justify-center"
         >
           <Trash2Icon className="mr-2" />
           Clear Storage
@@ -173,7 +174,7 @@ export default function UploadPage() {
         )}
       </div>
       {filePreview && (
-        <div className="ml-10 w-1/2">
+        <div className="ml-10 w-1/2 sm:text-sm transition duration-500 ease-in-out transform hover:scale-105">
           <embed
             src={filePreview}
             type="application/pdf"
