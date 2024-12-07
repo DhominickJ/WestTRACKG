@@ -3,7 +3,11 @@ import Image from "next/image";
 import { SignIn } from "@clerk/nextjs";
 
 function SignInPage() {
+
+
+
   return (
+
     <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/images/background.jpg')" }}>
       <div className="bg-white shadow-lg rounded-lg flex overflow-hidden max-w-[900px] w-full">
         {/* Left Section */}
@@ -12,8 +16,7 @@ function SignInPage() {
             src="/images/logo.png"
             alt="Logo"
             width={100}
-            height={100}
-          />
+            height={100} />
           <h2 className="text-2xl font-bold text-gray-700 mt-4">Sign Up</h2>
         </div>
 
@@ -26,8 +29,7 @@ function SignInPage() {
                 type="email"
                 id="email"
                 placeholder="Enter your email"
-                className="w-full p-2 rounded border border-gray-300 text-black"
-              />
+                className="w-full p-2 rounded border border-gray-300 text-black" />
             </div>
 
             <div className="mb-6">
@@ -36,8 +38,7 @@ function SignInPage() {
                 type="password"
                 id="password"
                 placeholder="Enter your password"
-                className="w-full p-2 rounded border border-gray-300 text-black"
-              />
+                className="w-full p-2 rounded border border-gray-300 text-black" />
             </div>
 
             <div className="mb-6">
@@ -46,8 +47,7 @@ function SignInPage() {
                 type="password"
                 id="confirm-password"
                 placeholder="Re-enter your password"
-                className="w-full p-2 rounded border border-gray-300 text-black"
-              />
+                className="w-full p-2 rounded border border-gray-300 text-black" />
             </div>
 
             <button
