@@ -3,20 +3,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { useAuth } from "@clerk/nextjs";
 import Header from "@/app/components/homeHeader";
+import ViewFilesPage from "@/app/components/RecentDocuments";
 import InteractiveButton from "@/app/components/homeButton";
 import Image from 'next/image';
 import Link from "next/link";
 
-
 function RecentDocuments() {
 
-  //make db req
-  return <div>Here are your recent documents...</div>;
+  return <div>
 
+    <h1 className="font-bold opacity-[0.70] text-[12px]">Processing</h1>
+
+    <ViewFilesPage />
+    {/* get user files from processing in db */}
+
+    
+    <h1 className="font-bold opacity-[0.70] text-[12px]">Finished</h1>
+    {/* get user files from finished in db */}
+  </div>;
 
 }
 
@@ -64,7 +69,7 @@ export default function Home() {
           <Link href="/users/upload">
           <div className="first w-[180px] mt-2 justify-center align-middle"> {/* Set a fixed width for the container */}
             <Image 
-              src="/pdf_templates/StudentOrganizations/Application for Approval-Accreditation of Student Organizations.png"
+              src="/images/AddFiles.png"
               alt="Add File"
               width={130}
               height={10}
