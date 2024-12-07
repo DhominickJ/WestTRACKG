@@ -5,10 +5,7 @@ import { useRouter } from "next/navigation";
 import { SignUp } from "@clerk/nextjs";
 import { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
-import {
-  notificationPopup,
-  LoginNotificationPop,
-} from "@/app/components/notificationPopup";
+import { LoginNotificationPop } from "@/app/components/notificationPopup";
 
 function SignUpPage() {
   const router = useRouter();
