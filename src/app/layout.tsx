@@ -1,5 +1,5 @@
 
-import { ClerkProvider, RedirectToSignIn, SignedIn, SignedOut, useAuth  } from "@clerk/nextjs";
+import { ClerkProvider  } from "@clerk/nextjs";
 import React from "react";
 import "./globals.css";
 // import { getAuth, signInWithCustomToken } from "firebase/auth";
