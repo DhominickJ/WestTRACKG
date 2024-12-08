@@ -1,6 +1,8 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import React from "react";
 import "./globals.css";
 import { Metadata } from "next";
+
 
 export const metadata: Metadata = {
   title: "WestTRACK",
@@ -13,8 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <ClerkProvider>
+        <html lang="en">
+          <body>
+            {children}
+            </body>
+        </html>
+    </ClerkProvider>
   );
 }
