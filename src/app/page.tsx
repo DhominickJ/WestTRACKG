@@ -33,7 +33,7 @@ export default function Home() {
         content="Our system guides your requests from start to finish with clarity and ease – making the process straightforward and stress-free."
         imgSrc="/icons/easy.png"
         imgPos="left"
-        bgColor="[0b5ca6]"
+        bgColor="[#0b5ca6]"
       />
       <ContentLoader
         header="Protected at Every Step"
