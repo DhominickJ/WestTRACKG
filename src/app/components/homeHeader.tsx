@@ -22,7 +22,11 @@ function Header(_type: any) {
           {/* Right Side: Search Bar, Bell Icon, and User Button */}
           <div className="flex items-center space-x-5 ml-auto mr-5">
             {/* Search Bar */}
-            <form action="/search" method="get" className="flex justify-center items-center">
+            <form
+              action="/search"
+              method="get"
+              className="flex justify-center items-center"
+            >
               <div className="search-container">
                 <input
                   type="search"
@@ -36,14 +40,12 @@ function Header(_type: any) {
             {/* Bell Icon */}
             <ul className="flex space-x-5 items-center">
               <li>
-                <Bell size={28} color="#0f0f0f"/>
+                <Bell size={28} color="#0f0f0f" />
               </li>
             </ul>
 
             {/* User Button */}
-            <div>
-              <UserButton />
-            </div>
+            <div>{/* <UserButton /> */}</div>
           </div>
         </nav>
       </div>

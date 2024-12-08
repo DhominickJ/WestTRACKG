@@ -71,7 +71,7 @@ export default function PdfViewer() {
     };
 
     fetchFiles();
-  }, [clerkUserId, isLoaded]);
+  }, [userId]);
 
   return (
     <div className="container flex justify-between items-start min-h-96">
