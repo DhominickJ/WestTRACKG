@@ -36,7 +36,7 @@ export default function PdfViewer() {
 
       try {
         const q = query(
-          collection(db, "processing"),
+          collection(db, "checked"),
           where("userId", "==", clerkUserId)
         );
         const querySnapshot = await getDocs(q);

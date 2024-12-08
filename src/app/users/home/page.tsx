@@ -4,7 +4,8 @@
 
 import { useEffect, useState } from "react";
 import Header from "@/app/components/homeHeader";
-import ViewFilesPage from "@/app/components/RecentDocuments";
+import ViewProcessingFilesPage from "@/app/components/RecentDocuments";
+import ViewFinishedFilesPage from "@/app/components/CheckedDocuments";
 import InteractiveButton from "@/app/components/homeButton";
 import Image from 'next/image';
 import Link from "next/link";
@@ -15,18 +16,21 @@ function RecentDocuments() {
 
     <h1 className="font-bold opacity-[0.70] text-[12px]">Processing</h1>
 
-    <ViewFilesPage />
     {/* get user files from processing in db */}
-
+    <ViewProcessingFilesPage />
     
-    <h1 className="font-bold opacity-[0.70] text-[12px]">Finished</h1>
+    <h1 className="font-bold opacity-[0.70] text-[12px] mt-2">Finished</h1>
     {/* get user files from finished in db */}
+    <ViewFinishedFilesPage />
   </div>;
-
 }
 
 function Announcements() {
+
+
   return <div>Here are the latest announcements...</div>;
+
+  
 }
 
 function downloadPdf(fileName: string) {

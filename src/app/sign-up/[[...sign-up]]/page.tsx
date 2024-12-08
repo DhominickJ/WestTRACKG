@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSignUp } from "@clerk/nextjs";
-import { LoginNotificationPop } from "@/app/components/notificationPopup";
 
 function SignUpPage() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -173,5 +172,4 @@ function SignUpPage() {
     </div>
   );
 }
-
 export default SignUpPage;
