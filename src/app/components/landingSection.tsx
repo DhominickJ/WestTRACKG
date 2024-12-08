@@ -15,9 +15,8 @@ const LandingSection = () => {
       <Image
         src="/images/Home_bg.png"
         alt="Background"
-        layout="fill"
-        objectFit="cover"
-        quality={100}
+        fill // Replaces `layout="fill"`
+        style={{ objectFit: "cover" }} // Replace legacy `objectFit` prop
       />
 
       {/* Logo and Tagline */}

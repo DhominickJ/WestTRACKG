@@ -27,7 +27,7 @@ function SignInPage() {
 
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push("/"); // Redirect to the home page or dashboard
+        router.push("/users/home"); // Redirect to the home page or dashboard
       } else {
         console.error("Additional steps required:", signInAttempt);
       }
