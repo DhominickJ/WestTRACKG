@@ -1,18 +1,19 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { ClerkProvider } from "@clerk/nextjs";
+
+import { ClerkProvider  } from "@clerk/nextjs";
+import React from "react";
 import "./globals.css";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "WestTRACK",
-  description: "Your Companion App",
+  description: "Your Transactions Made Easier",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <ClerkProvider>
       <html lang="en">
