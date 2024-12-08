@@ -58,7 +58,7 @@ function About(){
             </div>
           <div className="flex flex-col">
               <div className="flex justify-center mt-0">
-                <img src="/Images/mission.png" alt="hrn" className="w-full mt-[-10px] w-[299px] md:w-[600px] md:ml-[-20px] md:mt-[90px]" />
+                <img src="/images/mission.png" alt="Mission" className="w-full mt-[-10px] w-[299px] md:w-[600px] md:ml-[-20px] md:mt-[90px]" />
               </div>
             </div>
         </div>
@@ -78,7 +78,7 @@ function About(){
           </div>
           <div className="flex flex-col">
               <div className="flex justify-center mt-0">
-                <img src="/Images/vision.png" alt="hrn" className="w-full mt-[-10px] w-[299px] md:w-[600px] md:ml-[20px] md:mt-[100px]" />
+                <img src="/images/vision.png" alt="Vision" className="w-full mt-[-10px] w-[299px] md:w-[600px] md:ml-[20px] md:mt-[100px]" />
               </div>
             </div>
         </div>
