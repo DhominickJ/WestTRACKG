@@ -2,64 +2,114 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSignUp } from "@clerk/nextjs";
+// import { useSignUp } from "@clerk/nextjs";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 function SignUpPage() {
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const [emailAddress, setEmailAddress] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [username, setUsername] = React.useState('');
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
+  // const { isLoaded, signUp, setActive } = useSignUp();
+  const [emailAddress, setEmailAddress] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
   const [verifying, setVerifying] = React.useState(false);
-  const [code, setCode] = React.useState('');
+  const [code, setCode] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const router = useRouter();
 
-  // Handle submission of the sign-up form
+  // // Handle submission of the sign-up form
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!isLoaded) return;
+
+  //   try {
+  //     // Start the sign-up process using the provided details
+  //     await signUp.create({
+  //       emailAddress,
+  //       password,
+  //       username,
+  //       firstName,
+  //       lastName,
+  //     });
+
+  //     // Send a verification email to the user
+  //     await signUp.prepareEmailAddressVerification({
+  //       strategy: "email_code",
+  //     });
+
+  //     setVerifying(true); // Display the verification form
+  //   } catch (err: any) {
+  //     setError(err?.errors?.[0]?.message || "An unexpected error occurred.");
+  //   }
+  // };
+
+  // // Handle submission of the email verification form
+  // const handleVerify = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!isLoaded) return;
+
+  //   try {
+  //     const signUpAttempt = await signUp.attemptEmailAddressVerification({ code });
+
+  //     if (signUpAttempt.status === "complete") {
+  //       await setActive({ session: signUpAttempt.createdSessionId });
+  //       router.push("/users/home");
+  //     } else {
+  //       console.error(JSON.stringify(signUpAttempt, null, 2));
+  //     }
+  //   } catch (err: any) {
+  //     console.error("Error:", JSON.stringify(err, null, 2));
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isLoaded) return;
-
     try {
-      // Start the sign-up process using the provided details
-      await signUp.create({
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
         emailAddress,
-        password,
-        username,
-        firstName,
-        lastName,
+        password
+      );
+      await updateProfile(userCredential.user, {
+        displayName: `${firstName} ${lastName}`,
       });
 
-      // Send a verification email to the user
-      await signUp.prepareEmailAddressVerification({
-        strategy: "email_code",
-      });
+      await sendEmailVerification(userCredential.user);
 
       setVerifying(true); // Display the verification form
     } catch (err: any) {
-      setError(err?.errors?.[0]?.message || "An unexpected error occurred.");
+      setError(err.message || "An unexpected error occurred.");
     }
   };
 
-  // Handle submission of the email verification form
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isLoaded) return;
-
     try {
-      const signUpAttempt = await signUp.attemptEmailAddressVerification({ code });
+      const user = auth.currentUser;
 
-      if (signUpAttempt.status === "complete") {
-        await setActive({ session: signUpAttempt.createdSessionId });
-        router.push("/users/home");
+      if (user) {
+        await user.reload();
+        if (user.emailVerified) {
+          router.push("/users/home");
+        } else {
+          setError("Email not verified. Please check your inbox.");
+        }
       } else {
-        console.error(JSON.stringify(signUpAttempt, null, 2));
+        setError("No user is signed in.");
       }
     } catch (err: any) {
       console.error("Error:", JSON.stringify(err, null, 2));
+      setError("An unexpected error occurred.");
     }
   };
 
@@ -71,20 +121,21 @@ function SignUpPage() {
             Verify Your Email
           </h1>
           <p className="text-sm text-gray-600 text-center mb-6">
-            Enter the verification code sent to your email.
+            Check your Email for Verification :)
           </p>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleVerify}>
-            <input
+            {/* <input
               type="text"
               placeholder="Verification Code"
               className="w-full p-3 mb-4 border border-gray-300 rounded text-black"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-            />
+            /> */}
             <button
               type="submit"
               className="w-full bg-yellow-500 text-black font-semibold py-3 rounded shadow-lg transition duration-300 hover:bg-yellow-600"
+              onClick={handleVerify}
             >
               Verify
             </button>
@@ -173,3 +224,7 @@ function SignUpPage() {
   );
 }
 export default SignUpPage;
+
+function setActive(arg0: { session: any }) {
+  throw new Error("Function not implemented.");
+}

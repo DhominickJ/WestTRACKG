@@ -2,11 +2,24 @@
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
-import { useAuth } from "@clerk/nextjs";
+// import { useAuth } from "@clerk/nextjs";
 import { CloudUpload, UploadIcon, Trash2Icon } from "lucide-react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function UploadPage() {
-  const { userId, isLoaded } = useAuth(); // Clerk's useAuth hook for userId
+  // const { userId, isLoaded } = useAuth(); // Clerk's useAuth hook for userId
+  const [userId, setUserId] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUserId(user.uid);
+    } else {
+      setUserId(null);
+    }
+    setIsLoaded(true);
+  });
   const [fileName, setFileName] = useState<string | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);

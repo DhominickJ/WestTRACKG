@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { useAuth } from "@clerk/nextjs";
+import { db, auth } from "@/lib/firebase";
 import Header from "@/app/components/homeHeader";
 import Image from "next/image";
+import { onAuthStateChanged } from "firebase/auth";
 
 interface File {
   id: string;
@@ -17,13 +17,25 @@ interface File {
 }
 
 const Files = () => {
-  const { userId: clerkUserId, isLoaded } = useAuth();
+  const [userId, setUserId] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     const fetchFiles = async () => {
-      if (!clerkUserId || !isLoaded) {
+      if (!userId) {
         setFiles([]);
         setLoading(false);
         return;
@@ -33,17 +45,17 @@ const Files = () => {
       try {
         const q = query(
           collection(db, "processing"),
-          where("userId", "==", clerkUserId)
+          where("userId", "==", userId) // Only files owned by the user are accessed
         );
         const querySnapshot = await getDocs(q);
         const fileData: File[] = querySnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
-            fileName: data.fileName || "Unknown File", // Fallback for missing fileName
-            status: data.status || "Unknown Status", // Fallback for missing status
-            date: data.date?.toDate() || new Date(), // Default to current date if undefined
-            time: data.time?.toDate() || new Date(), // Default to current time if undefined
+            fileName: data.fileName || "Unknown File",
+            status: data.status || "Unknown Status",
+            date: data.date?.toDate() || new Date(),
+            time: data.time?.toDate() || new Date(),
           };
         });
         setFiles(fileData);
@@ -59,7 +71,7 @@ const Files = () => {
     };
 
     fetchFiles();
-  }, [clerkUserId, isLoaded]);
+  }, [userId]);
 
   return (
     <>
@@ -77,15 +89,15 @@ const Files = () => {
         <h1 className="text-[42px] font-bold mb-8">📁 Your Files</h1>
         {loading ? (
           <p>Loading...</p>
-        ) : clerkUserId ? (
+        ) : userId ? (
           files.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full border-collapse border-4 border-red-50 rounded-lg overflow-hidden">
                 <thead className="text-[16px]">
                   <tr className="bg-gray-100">
-                    <th className="border border-westTrackGray bg-homeLightBlueBG px-4 py-2 text-left text-westTrackWhite">
+                    {/* <th className="border border-westTrackGray bg-homeLightBlueBG px-4 py-2 text-left text-westTrackWhite">
                       🗂️ Document ID
-                    </th>
+                    </th> */}
                     <th className="border border-westTrackGray bg-homeLightBlueBG px-4 py-2 text-left text-westTrackWhite">
                       📝 Filename
                     </th>
@@ -106,11 +118,13 @@ const Files = () => {
                       key={file.id}
                       className="border-b border-gray-300 text-[16px]"
                     >
-                      <td className="border border-gray-300 px-4 py-2">
+                      {/* <td className="border border-gray-300 px-4 py-2">
                         {file.id}
-                      </td>
+                      </td> */}
                       <td className="border border-gray-300 px-4 py-2">
-                        <a>{file.fileName}</a>
+                        <a href={`/users/document?fileId=${file.id}`}>
+                          {file.fileName}
+                        </a>
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
                         {file.date.toLocaleDateString()}

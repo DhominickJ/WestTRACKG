@@ -4,9 +4,9 @@
 
 import { File } from "@/app/api/fileOperations";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
 import { getFileById } from "@/app/api/fileOperations";
-import { useUser } from "@clerk/nextjs";
+import { useState, useEffect, useRef, Suspense } from "react";
+import { auth } from "@/lib/firebase";
 import {
   FaRegFileAlt,
   FaRegIdCard,
@@ -19,8 +19,9 @@ function DocumentContent() {
   const searchParams = useSearchParams();
   const fileId = searchParams.get("fileId");
   const [file, setFile] = useState<File | null>(null);
-  const { user, isLoaded } = useUser();
-  const userName = isLoaded ? user?.fullName || user?.emailAddresses[0]?.emailAddress : null;
+  const { currentUser: user } = auth;
+  const userName =
+    user?.displayName || user?.email ? user?.displayName || user?.email : null;
 
   useEffect(() => {
     if (fileId) {
@@ -62,31 +63,21 @@ function DocumentContent() {
               </p>
               <div className="flex items-center">
                 <FaRegCalendarAlt className="mr-5" />
-                <p className="text-black font-normal underline">
-                  Date:{" "}
-                </p>
+                <p className="text-black font-normal underline">Date: </p>
               </div>
               <p className="text-black font-bold underline ml-5">
                 November 14, 2024
               </p>
               <div className="flex items-center">
                 <FaRegClock className="mr-5" />
-                <p className="text-black font-normal underline">
-                  Time:{" "}
-                </p>
+                <p className="text-black font-normal underline">Time: </p>
               </div>
-              <p className="text-black font-bold underline ml-5">
-                12:51 PM
-              </p>
+              <p className="text-black font-bold underline ml-5">12:51 PM</p>
               <div className="flex items-center">
                 <FaUserGraduate className="mr-5" />
-                <p className="text-black font-normal underline">
-                  Program:{" "}
-                </p>
+                <p className="text-black font-normal underline">Program: </p>
               </div>
-              <p className="text-black font-bold underline ml-5">
-                BSCS 3-A AI
-              </p>
+              <p className="text-black font-bold underline ml-5">BSCS 3-A AI</p>
             </div>
           </div>
           <div className="document flex flex-col pt-5">
