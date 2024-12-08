@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 // import { useAuth } from "@clerk/nextjs";
 import { CloudUpload, UploadIcon, Trash2Icon } from "lucide-react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
 export default function UploadPage() {
+  const router = useRouter();
   // const { userId, isLoaded } = useAuth(); // Clerk's useAuth hook for userId
   const [userId, setUserId] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -73,6 +75,7 @@ export default function UploadPage() {
       });
 
       alert("File Uploaded Successfully!");
+      router.push("/users/home");
     } catch (error) {
       console.error("Error uploading file: ", error);
       alert("File Upload Failed!");
