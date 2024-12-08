@@ -1,4 +1,4 @@
-//this page will be used to view the document to be signed by the student
+// This page will be used to view the document to be signed by the student
 
 "use client";
 
@@ -6,8 +6,7 @@ import { File } from "@/app/api/fileOperations";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { getFileById } from "@/app/api/fileOperations";
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { useUser } from "@clerk/nextjs";
 import {
   FaRegFileAlt,
   FaRegIdCard,
@@ -20,7 +19,8 @@ function DocumentContent() {
   const searchParams = useSearchParams();
   const fileId = searchParams.get("fileId");
   const [file, setFile] = useState<File | null>(null);
-  const [userName, setUserName] = useState<string | null>(null);
+  const { user, isLoaded } = useUser();
+  const userName = isLoaded ? user?.fullName || user?.emailAddresses[0]?.emailAddress : null;
 
   useEffect(() => {
     if (fileId) {
@@ -29,18 +29,6 @@ function DocumentContent() {
         .catch(console.error);
     }
   }, [fileId]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserName(user.displayName || user.email);
-      } else {
-        setUserName(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   return (
     <>
@@ -70,7 +58,7 @@ function DocumentContent() {
                 </p>
               </div>
               <p className="text-black font-bold font-['Inter'] underline ml-5">
-                {userName}
+                {userName || "Loading..."}
               </p>
               <div className="flex items-center">
                 <FaRegCalendarAlt className="mr-5" />
