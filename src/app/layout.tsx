@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "WestTRACK",
-  description: "Your Companion App",
+  description: "Your Transactions Made Easier",
 };
 
 export default function RootLayout({

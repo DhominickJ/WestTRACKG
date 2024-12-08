@@ -2,40 +2,101 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { SignUp } from "@clerk/nextjs";
-import { useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import { LoginNotificationPop } from "@/app/components/notificationPopup";
 
 function SignUpPage() {
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const [emailAddress, setEmailAddress] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [firstName, setFirstName] = React.useState('');
+  const [lastName, setLastName] = React.useState('');
+  const [verifying, setVerifying] = React.useState(false);
+  const [code, setCode] = React.useState('');
+  const [error, setError] = React.useState<string | null>(null);
   const router = useRouter();
 
-  const { signUp } = useSignUp();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
+  // Handle submission of the sign-up form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isLoaded) return;
+
     try {
-      if (signUp) {
-        await signUp.create({
-          firstName,
-          lastName,
-          emailAddress: email,
-          password,
-        });
-        LoginNotificationPop;
-      } else {
-        console.error("signUp is undefined");
-      }
-      router.push("/sign-in");
-    } catch (error) {
-      console.error("Error signing up:", error);
+      // Start the sign-up process using the provided details
+      await signUp.create({
+        emailAddress,
+        password,
+        firstName,
+        lastName,
+      });
+
+      // Send a verification email to the user
+      await signUp.prepareEmailAddressVerification({
+        strategy: "email_code",
+      });
+
+      setVerifying(true); // Display the verification form
+    } catch (err: any) {
+      setError(err?.errors?.[0]?.message || "An unexpected error occurred.");
     }
   };
 
+  // Handle submission of the email verification form
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isLoaded) return;
+
+    try {
+      const signUpAttempt = await signUp.attemptEmailAddressVerification({
+        code,
+      });
+
+      if (signUpAttempt.status === "complete") {
+        await setActive({ session: signUpAttempt.createdSessionId });
+        router.push("/"); // Redirect to home page
+      } else {
+        console.error("Verification incomplete:", signUpAttempt);
+      }
+    } catch (err: any) {
+      setError(err?.errors?.[0]?.message || "Verification failed.");
+    }
+  };
+
+  // Display the verification form if verifying
+  if (verifying) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-cover bg-center">
+        <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
+          <h1 className="text-2xl font-bold text-center text-gray-700 mb-4">
+            Verify Your Email
+          </h1>
+          <p className="text-sm text-gray-600 text-center mb-6">
+            Enter the verification code sent to your email.
+          </p>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          <form onSubmit={handleVerify}>
+            <input
+              type="text"
+              placeholder="Verification Code"
+              className="w-full p-3 mb-4 border border-gray-300 rounded text-black"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="w-full bg-yellow-500 text-black font-semibold py-3 rounded shadow-lg transition duration-300 hover:bg-yellow-600"
+            >
+              Verify
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Sign-Up Form
   return (
     <div
       className="flex justify-center items-center min-h-screen bg-cover bg-center"
@@ -63,6 +124,7 @@ function SignUpPage() {
           <h3 className="text-2xl font-bold mb-6 mt-10 text-gray-700">
             Create a new account
           </h3>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <form onSubmit={handleSubmit}>
             <div className="flex mb-4">
               <input
@@ -85,8 +147,8 @@ function SignUpPage() {
                 type="email"
                 placeholder="Email Address"
                 className="w-full p-3 border border-gray-300 rounded text-black"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={emailAddress}
+                onChange={(e) => setEmailAddress(e.target.value)}
               />
             </div>
             <div className="mb-6">
@@ -101,9 +163,6 @@ function SignUpPage() {
             <button
               type="submit"
               className="w-full bg-yellow-500 text-black font-semibold py-3 rounded shadow-lg transition duration-300 hover:bg-yellow-600"
-              onClick={() => {
-                handleSubmit;
-              }}
             >
               Create Account
             </button>
