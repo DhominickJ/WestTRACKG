@@ -1,4 +1,3 @@
-import { UserButton } from "@clerk/nextjs";
 import { Bell } from "lucide-react";
 import Image from "next/image";
 
@@ -16,8 +15,12 @@ function Header(_type: any) {
               height={40}
               className="ml-5"
             />
-            <h1 className="ml-8 mt-1 font-[Mayor] text-[hsl(var(--primary-color))] text-[22px]">West</h1>
-            <h1 className="ml-0 mt-1 font-[Mayor] text-[hsl(var(--accent-color))] text-[22px]">Track</h1>
+            <h1 className="ml-8 mt-1 font-[Mayor] text-[hsl(var(--primary-color))] text-[22px]">
+              West
+            </h1>
+            <h1 className="ml-0 mt-1 font-[Mayor] text-[hsl(var(--accent-color))] text-[22px]">
+              Track
+            </h1>
           </div>
 
           {/* Right Side: Search Bar, Bell Icon, and User Button */}
@@ -37,14 +40,11 @@ function Header(_type: any) {
             {/* Bell Icon */}
             <ul className="flex space-x-5 items-center">
               <li>
-                <Bell size={28} color="#0f0f0f"/>
+                <Bell size={28} color="#0f0f0f" />
               </li>
             </ul>
 
             {/* User Button */}
-            <div>
-              <UserButton />
-            </div>
           </div>
         </nav>
       </div>
