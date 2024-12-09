@@ -33,16 +33,6 @@ function Header() {
           </div>
           <ul className="left hide-on-med-and-down flex">
             <li className="mr-5">
-              <a href="/users/upload">
-                <UploadCloud size={32} />
-              </a>
-            </li>
-            <li className="mr-5">
-              <a href="/users/files">
-                <FilesIcon size={32} />
-              </a>
-            </li>
-            <li className="mr-5">
               <a href="/users/home">
                 <HomeIcon size={32} />
               </a>
@@ -51,11 +41,6 @@ function Header() {
               <a href="/sign-in">
                 <UserCircle size={32} />
               </a>
-            </li>
-            <li className="mr-5">
-              <button onClick={signOut} title="Sign Out">
-                <LogOutIcon size={32} />
-              </button>
             </li>
           </ul>
         </nav>
