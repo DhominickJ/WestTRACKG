@@ -15,28 +15,6 @@ function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // // Handle form submission
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!isLoaded) return;
-
-  //   try {
-  //     const signInAttempt = await signIn.create({
-  //       identifier: email,
-  //       password,
-  //     });
-
-  //     if (signInAttempt.status === "complete") {
-  //       await setActive({ session: signInAttempt.createdSessionId });
-  //       router.push("/users/home"); // Redirect to the home page or dashboard
-  //     } else {
-  //       console.error("Additional steps required:", signInAttempt);
-  //     }
-  //   } catch (err: any) {
-  //     setError(err?.errors?.[0]?.message || "An unexpected error occurred.");
-  //   }
-  // };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       try {
