@@ -21,11 +21,16 @@ export default function DocView() {
 }
 
 function DocumentContent() {
-  const { id } = useParams(); // Retrieve document ID from URL
-  const [fileData, setFileData] = useState<{ fileName: string; fileContent: string } | null>(null);
+  const { id } = useParams();
+  const [fileData, setFileData] = useState<{
+    fileName: string;
+    fileContent: string;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const { user, isLoaded } = useUser();
-  const userName = isLoaded ? user?.fullName || user?.emailAddresses[0]?.emailAddress : "Loading...";
+  const userName = isLoaded
+    ? user?.fullName || user?.emailAddresses[0]?.emailAddress
+    : "Loading...";
 
   // Ref to prevent repeated state updates
   const isUpdating = useRef(false);
@@ -37,7 +42,7 @@ function DocumentContent() {
 
       setLoading(true);
       try {
-        let collectionName = "processing"; // Default to "processing"
+        let collectionName = "processing";
 
         const docRefFinished = doc(db, "finished", id as string);
         const docSnapFinished = await getDoc(docRefFinished);
@@ -51,7 +56,9 @@ function DocumentContent() {
           if (docSnapProcessing.exists()) {
             collectionName = "processing";
           } else {
-            console.error("No document found with the given ID in both collections.");
+            console.error(
+              "No document found with the given ID in both collections."
+            );
             setLoading(false);
             return;
           }
@@ -87,7 +94,9 @@ function DocumentContent() {
     return <div className="text-center text-lg">Document not found.</div>;
   }
 
-  function handleDelete(event: React.MouseEvent<HTMLImageElement, MouseEvent>): void {
+  function handleDelete(
+    event: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ): void {
     throw new Error("Function not implemented.");
   }
 
@@ -121,7 +130,7 @@ function DocumentContent() {
               height={30}
               className="cursor-pointer"
               onClick={() => {
-                const link = document.createElement('a');
+                const link = document.createElement("a");
                 link.href = `data:application/pdf;base64,${fileData.fileContent}`;
                 link.download = fileData.fileName || "download.pdf";
                 document.body.appendChild(link);
@@ -150,7 +159,9 @@ function DocumentContent() {
           <div className="document flex flex-col">
             <div className="DocumentInfo text-black text-lg font-bold mb-3">
               <p className="mb-2">Document Info</p>
-              <p className="text-base font-medium truncate">ℹ️ {fileData.fileName || "Unknown Document"}</p>
+              <p className="text-base font-medium truncate">
+                ℹ️ {fileData.fileName || "Unknown Document"}
+              </p>
             </div>
             <div className="space-y-4 text-sm mt-2">
               <div>
@@ -159,23 +170,38 @@ function DocumentContent() {
               </div>
               <div>
                 <p className="text-black font-normal">Date:</p>
-                <p className="text-black font-bold">📅 {new Date().toLocaleDateString()}</p>
+                <p className="text-black font-bold">
+                  📅 {new Date().toLocaleDateString()}
+                </p>
               </div>
               <div>
                 <p className="text-black font-normal">Time:</p>
-                <p className="text-black font-bold">🕒 {new Date().toLocaleTimeString()}</p>
+                <p className="text-black font-bold">
+                  🕒 {new Date().toLocaleTimeString()}
+                </p>
               </div>
-              <hr style={{ backgroundColor: 'black', opacity: 0.3, height: '1px', border: 'none', marginBottom: "12px", marginTop: "16px" }} />
+              <hr
+                style={{
+                  backgroundColor: "black",
+                  opacity: 0.3,
+                  height: "1px",
+                  border: "none",
+                  marginBottom: "12px",
+                  marginTop: "16px",
+                }}
+              />
               <div className="Progress text-black text-lg font-bold mb-3">
                 <p className="mb-2">Progress</p>
-                <p className="text-base font-medium truncate">{fileData.fileName || "Unknown Document"}</p>
+                <p className="text-base font-medium truncate">
+                  {fileData.fileName || "Unknown Document"}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-          {/* Document Viewer */}
-          <div className="flex-grow flex flex-col items-center justify-center mx-auto px-5 mt-6">
+        {/* Document Viewer */}
+        <div className="flex-grow flex flex-col items-center justify-center mx-auto px-5 mt-6">
           <div className="relative overflow-hidden w-6/12 h-full flex flex-col items-center justify-center">
             {/* Embed PDF in an iframe */}
             <iframe
@@ -192,23 +218,22 @@ function DocumentContent() {
           <div className="EditAndSign text-black text-lg font-bold mb-3">
             <p className="mb-2 items-end justify-end">Edit and Sign PDF</p>
             <div className="flex flex-col items-center justify-center right-0">
-
-            <Image 
-              src="/images/editpdf.svg" 
-              alt="Edit"  
-              width={200} 
-              height={200} 
-              className="cursor-pointer mb-2"
-              onClick={() => alert("Edit PDF")} //change this functionn please
+              <Image
+                src="/images/editpdf.svg"
+                alt="Edit"
+                width={200}
+                height={200}
+                className="cursor-pointer mb-2"
+                onClick={() => alert("Edit PDF")} //change this functionn please
               />
 
-            <Image 
-              src="/images/signpdf.svg" 
-              alt="Edit" 
-              width={200} 
-              height={200} 
-              className="cursor-pointer"
-              onClick={() => alert("Edit PDF")} //change this functionn please
+              <Image
+                src="/images/signpdf.svg"
+                alt="Edit"
+                width={200}
+                height={200}
+                className="cursor-pointer"
+                onClick={() => alert("Edit PDF")} //change this functionn please
               />
             </div>
           </div>
