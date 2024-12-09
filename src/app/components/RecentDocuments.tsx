@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { useAuth } from "@clerk/nextjs";
+import { db, auth } from "@/lib/firebase";
 import { Document, Page, pdfjs } from "react-pdf";
 
 // Import required styles for annotation and text layers
@@ -25,14 +24,26 @@ interface PdfViewerProps {
 }
 
 export default function PdfViewer({ searchQuery }: PdfViewerProps) {
-  const { userId: clerkUserId, isLoaded } = useAuth();
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter(); // Initialize the useRouter hook
+  const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchFiles = async () => {
-      if (!clerkUserId || !isLoaded) {
+      if (!userId) {
         setFiles([]);
         setLoading(false);
         return;
@@ -43,7 +54,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
       try {
         const q = query(
           collection(db, "processing"),
-          where("userId", "==", clerkUserId)
+          where("userId", "==", userId)
         );
         const querySnapshot = await getDocs(q);
 
@@ -52,7 +63,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
           return {
             id: doc.id,
             fileName: data.fileName,
-            fileContent: data.fileContent, // Base64 string from Firestore
+            fileContent: data.fileContent,
           };
         });
 
@@ -65,7 +76,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
     };
 
     fetchFiles();
-  }, [clerkUserId, isLoaded]);
+  }, [userId]);
 
   // Filter files based on the search query
   const filteredFiles = files.filter((file) =>
