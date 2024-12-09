@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-// import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import { signInWithGoogle } from "@/app/api/signin-auth";

@@ -1,4 +1,3 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import React from "react";
 import "./globals.css";
 import { Metadata } from "next";
