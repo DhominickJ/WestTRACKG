@@ -75,7 +75,39 @@ const Files = () => {
 
   return (
     <>
-      <Header />
+      <Header
+        onSearch={async (searchQuery: string) => {
+          setLoading(true);
+          try {
+            const q = query(
+              collection(db, "processing"),
+              where("userId", "==", userId),
+              where("fileName", ">=", searchQuery),
+              where("fileName", "<=", searchQuery + "\uf8ff")
+            );
+            const querySnapshot = await getDocs(q);
+            const fileData: File[] = querySnapshot.docs.map((doc) => {
+              const data = doc.data();
+              return {
+                id: doc.id,
+                fileName: data.fileName || "Unknown File",
+                status: data.status || "Unknown Status",
+                date: data.date?.toDate() || new Date(),
+                time: data.time?.toDate() || new Date(),
+              };
+            });
+            setFiles(fileData);
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              console.error("Error searching files: ", error.message);
+            } else {
+              console.error("Error searching files: ", error);
+            }
+          } finally {
+            setLoading(false);
+          }
+        }}
+      />
       <div className="m-12">
         <Link href="/users/home">
           <Image
@@ -95,9 +127,6 @@ const Files = () => {
               <table className="min-w-full border-collapse border-4 border-red-50 rounded-lg overflow-hidden">
                 <thead className="text-[16px]">
                   <tr className="bg-gray-100">
-                    {/* <th className="border border-westTrackGray bg-homeLightBlueBG px-4 py-2 text-left text-westTrackWhite">
-                      🗂️ Document ID
-                    </th> */}
                     <th className="border border-westTrackGray bg-homeLightBlueBG px-4 py-2 text-left text-westTrackWhite">
                       📝 Filename
                     </th>
@@ -118,9 +147,6 @@ const Files = () => {
                       key={file.id}
                       className="border-b border-gray-300 text-[16px]"
                     >
-                      {/* <td className="border border-gray-300 px-4 py-2">
-                        {file.id}
-                      </td> */}
                       <td className="border border-gray-300 px-4 py-2">
                         <a href={`/users/document?fileId=${file.id}`}>
                           {file.fileName}

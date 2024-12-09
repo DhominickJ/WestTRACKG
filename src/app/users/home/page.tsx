@@ -44,7 +44,11 @@ export default function Home() {
 
   return (
     <>
-      <Header />
+      <Header
+        onSearch={function (query: string): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
 
       <div className="justify-start h-[325px] w-full bg-homeLightBlueBG bg-opacity-[0.2] p-16 pl-[112px] pt-8 pb-0">
         <h1 className="font-bold opacity-[0.70] text-[12px]">
