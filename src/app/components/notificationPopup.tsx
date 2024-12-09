@@ -6,8 +6,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface Notification {
   id: number;
+  fileId: string;
+  fileName: string;
   text: string;
   time: string;
+  read: boolean;
 }
 
 interface NotificationPopupProps {
@@ -79,11 +82,3 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
 };
 
 export default NotificationPopup;
-
-export const LoginNotificationPop = () => {
-  <Alert>
-    <User className="h-4 w-4" />
-    <AlertTitle>Signup Status</AlertTitle>
-    <AlertDescription>You Have Successfully Signed Up!</AlertDescription>
-  </Alert>;
-};

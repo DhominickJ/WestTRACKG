@@ -5,17 +5,50 @@ import { useState, useEffect } from "react";
 import { auth } from "@/lib/firebase";
 import { signOut } from "../api/signin-auth";
 import { onAuthStateChanged, User } from "firebase/auth";
+import { db } from "@/lib/firebase";
+import { query, getDocs, collection, where } from "firebase/firestore";
 
 function Header({ onSearch }: { onSearch: (query: string) => void }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<
+    { id: string; title: string; status: string; time: string }[]
+  >([]);
+
+  const [user, setUser] = useState<User | null>(null);
+
+  const fetchNotifications = async () => {
+    try {
+      const q = query(
+        collection(db, "processing"),
+        where("userId", "==", user?.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      const data = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        filename: doc.data().fileName,
+        status: doc.data().status,
+        time: doc.data().time,
+      }));
+      setNotifications(
+        data.map((item) => ({
+          id: item.id,
+          title: item.filename,
+          status: item.status,
+          time: item.time,
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error);
+    }
+  };
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(searchQuery);
   };
-
-  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -63,13 +96,42 @@ function Header({ onSearch }: { onSearch: (query: string) => void }) {
                 />
               </div>
             </form>
-            <Link href={""}>
-              <ul className="flex space-x-5 items-center cursor-pointer">
-                <li>
-                  <Bell size={28} color="#0f0f0f" />
-                </li>
-              </ul>
-            </Link>
+            <button
+              onClick={() => {
+                if (user) {
+                  fetchNotifications();
+                  setNotificationsOpen(!notificationsOpen);
+                }
+              }}
+            >
+              <Bell size={28} color="#0f0f0f" className="relative" />
+            </button>
+            {notificationsOpen && (
+              <div className="notification-center absolute right-20 top-0 mt-20 w-[30rem] bg-white border border-gray-200 rounded-md">
+                <h2 className="px-4 py-2 text-lg font-semibold">
+                  Notifications
+                </h2>
+                <ul className="max-h-64 overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map((doc) => (
+                      <li key={doc.id} className="px-4 py-2 border-t">
+                        <p className="font-medium">{doc.title}</p>
+                        <div className="flex flex-row items-center justify-around">
+                          <p className="text-sm text-gray-600">
+                            Last Update: {doc.time}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Status: {doc.status}
+                          </p>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <p className="px-4 py-2 text-gray-500">No notifications</p>
+                  )}
+                </ul>
+              </div>
+            )}
             <div className="relative">
               {user ? (
                 <div className="flex items-center space-x-3 cursor-pointer relative">
