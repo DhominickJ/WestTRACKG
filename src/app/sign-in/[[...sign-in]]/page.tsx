@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 // import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { CustomGoogleOneTap } from "@/app/components/CustomGoogleOneTap";
 import { auth } from "@/lib/firebase";
 import { signInWithGoogle } from "@/app/api/signin-auth";
 import { signInWithEmail } from "@/app/api/signin-auth";
