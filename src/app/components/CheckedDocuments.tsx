@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -19,9 +20,14 @@ interface FileData {
   fileContent: string; // Base64 encoded string
 }
 
-export default function PdfViewer() {
+interface PdfViewerProps {
+  searchQuery: string;
+}
+
+export default function PdfViewer({ searchQuery }: PdfViewerProps) {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter(); // Initialize the useRouter hook
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -36,7 +42,7 @@ export default function PdfViewer() {
 
       try {
         const q = query(
-          collection(db, "checked"),
+          collection(db, "finished"),
           where("userId", "==", userId.uid)
         );
         const querySnapshot = await getDocs(q);
@@ -61,18 +67,29 @@ export default function PdfViewer() {
     fetchFiles();
   }, []);
 
+  // Filter files based on the search query
+  const filteredFiles = files.filter((file) =>
+    file.fileName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleDocumentClick = (fileId: string) => {
+    // Navigate to the document view page with the file ID
+    router.push(`/users/document/${fileId}`);
+  };
+
   return (
     <div className="container flex justify-between items-start min-h-96">
       {loading ? (
         <p>Loading files...</p>
-      ) : files.length > 0 ? (
+      ) : filteredFiles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
-          {files.map((file) => (
+          {filteredFiles.map((file) => (
             <div
               key={file.id}
-              className="border p-4 text-center truncate max-w-[300px] justify-self-center self-start ml-24"
+              onClick={() => handleDocumentClick(file.id)} // Add click handler
+              className="border p-4 text-center truncate max-w-[300px] justify-self-center self-start ml-24 cursor-pointer"
             >
-              <div className="relative overflow-hidden w-[250px] h-[350px] border border-black cursor-pointer transition-all duration-300 hover:border-homeLightBlueBG hover:shadow-lg">
+              <div className="relative overflow-hidden w-[250px] h-[350px] border border-black transition-all duration-300 hover:border-homeLightBlueBG hover:shadow-lg">
                 <Document
                   file={`data:application/pdf;base64,${file.fileContent}`}
                   className="w-full h-full flex justify-center"
