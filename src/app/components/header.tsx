@@ -53,7 +53,7 @@ function Header() {
               </a>
             </li>
             <li className="mr-5">
-              <button onClick={signOut}>
+              <button onClick={signOut} title="Sign Out">
                 <LogOutIcon size={32} />
               </button>
             </li>
