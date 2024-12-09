@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { useAuth } from "@clerk/nextjs";
 import { Document, Page, pdfjs } from "react-pdf";
+import { auth } from "@/lib/firebase";
 
 // Import required styles for annotation and text layers
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
 // Configure the worker file
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs`;
@@ -20,13 +20,13 @@ interface FileData {
 }
 
 export default function PdfViewer() {
-  const { userId: clerkUserId, isLoaded } = useAuth();
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFiles = async () => {
-      if (!clerkUserId || !isLoaded) {
+      const userId = auth.currentUser;
+      if (!userId) {
         setFiles([]);
         setLoading(false);
         return;
@@ -37,7 +37,7 @@ export default function PdfViewer() {
       try {
         const q = query(
           collection(db, "checked"),
-          where("userId", "==", clerkUserId)
+          where("userId", "==", userId.uid)
         );
         const querySnapshot = await getDocs(q);
 
@@ -59,7 +59,7 @@ export default function PdfViewer() {
     };
 
     fetchFiles();
-  }, [clerkUserId, isLoaded]);
+  }, []);
 
   return (
     <div className="container flex justify-between items-start min-h-96">
@@ -89,4 +89,4 @@ export default function PdfViewer() {
       )}
     </div>
   );
-}  
+}

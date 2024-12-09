@@ -245,10 +245,6 @@ export default function Home() {
         </p>
       </div>
 
-      {/* Team Section */}
-      {/* <TeamSection /> */}
-
-      {/* Footer Section */}
       <Footer />
     </div>
   );

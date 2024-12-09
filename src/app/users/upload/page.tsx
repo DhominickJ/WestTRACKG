@@ -3,7 +3,6 @@ import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-// import { useAuth } from "@clerk/nextjs";
 import { CloudUpload, UploadIcon, Trash2Icon } from "lucide-react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
