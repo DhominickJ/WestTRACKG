@@ -5,9 +5,10 @@ import {
   PackageIcon,
   UploadCloud,
   UserCircle,
+  LogOutIcon,
 } from "lucide-react";
 import Image from "next/image";
-//import NotificationPopup from "./components/notificationPopup";
+import { signOut } from "../api/signin-auth";
 
 function Header() {
   //const notifications = [
@@ -50,6 +51,11 @@ function Header() {
               <a href="/sign-in">
                 <UserCircle size={32} />
               </a>
+            </li>
+            <li className="mr-5">
+              <button onClick={signOut}>
+                <LogOutIcon size={32} />
+              </button>
             </li>
           </ul>
         </nav>
