@@ -4,13 +4,14 @@ import { useParams } from "next/navigation";
 import { useEffect, useState, Suspense, useRef } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
+import { auth } from "@/lib/firebase";
 
 // Import necessary styles
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import { User } from "firebase/auth";
 
 export default function DocView() {
   return (
@@ -27,10 +28,17 @@ function DocumentContent() {
     fileContent: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user, isLoaded } = useUser();
-  const userName = isLoaded
-    ? user?.fullName || user?.emailAddresses[0]?.emailAddress
-    : "Loading...";
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+  const userName = user?.displayName || user?.email;
 
   // Ref to prevent repeated state updates
   const isUpdating = useRef(false);
@@ -71,7 +79,7 @@ function DocumentContent() {
           const data = docSnap.data();
           setFileData({
             fileName: data.fileName,
-            fileContent: data.fileContent, // Base64-encoded PDF
+            fileContent: data.fileContent,
           });
         } else {
           console.error("No document found with the given ID.");
