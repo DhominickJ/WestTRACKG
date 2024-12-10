@@ -103,25 +103,58 @@ function Header({ onSearch }: { onSearch: (query: string) => void }) {
                   setNotificationsOpen(!notificationsOpen);
                 }
               }}
+              className="relative"
             >
-              <Bell size={28} color="#0f0f0f" className="relative" />
+              <Bell size={28} color="#0f0f0f" />
+              {notifications.length > 0 && (
+                <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-yellow-300 rounded-full"></span>
+              )}
             </button>
             {notificationsOpen && (
-              <div className="notification-center absolute right-20 top-0 mt-20 w-[30rem] bg-white border border-gray-200 rounded-md">
+              <div
+                className={`notification-center absolute right-20 top-0 mt-20 w-[30rem] bg-white border border-gray-200 rounded-md transition-all duration-2000 ease-in-out transform ${
+                  notificationsOpen
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-4"
+                }`}
+              >
                 <h2 className="px-4 py-2 text-lg font-semibold">
-                  Notifications
+                  🔔 Notifications
                 </h2>
                 <ul className="max-h-64 overflow-y-auto">
                   {notifications.length > 0 ? (
-                    notifications.map((doc) => (
-                      <li key={doc.id} className="px-4 py-2 border-t">
+                    notifications.map((doc, index) => (
+                      <li
+                        key={doc.id}
+                        className={`px-4 py-2 border-t transition-transform duration-500 ease-in-out opacity-0 ${
+                          notificationsOpen
+                            ? "translate-x-0"
+                            : "-translate-x-full"
+                        }`}
+                        style={{
+                          transitionDelay: `${index * 0.5}s`,
+                          animation: notificationsOpen
+                            ? `fadeIn 0.5s ease-in-out ${index * 0.5}s forwards`
+                            : `fadeOut 0.5s ease-in-out ${
+                                index * 0.5
+                              }s forwards`,
+                        }}
+                        onAnimationEnd={() => {
+                          if (notificationsOpen) {
+                            document.getElementById(
+                              `notification-${doc.id}`
+                            )!.style.opacity = "1";
+                          }
+                        }}
+                        id={`notification-${doc.id}`}
+                      >
                         <p className="font-medium">{doc.title}</p>
                         <div className="flex flex-row items-center justify-around">
                           <p className="text-sm text-gray-600">
-                            Last Update: {doc.time}
+                            ⌛ Last Update: {doc.time}
                           </p>
                           <p className="text-sm text-gray-600">
-                            Status: {doc.status}
+                            😄 Status: {doc.status}
                           </p>
                         </div>
                       </li>
