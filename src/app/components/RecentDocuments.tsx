@@ -84,7 +84,6 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
   );
 
   const handleDocumentClick = (fileId: string) => {
-    // Navigate to the document view page with the file ID
     router.push(`/users/document/${fileId}`);
   };
 
@@ -93,12 +92,12 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
       {loading ? (
         <p>Loading files...</p>
       ) : filteredFiles.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-10 w-full max-w-screen-lg mx-auto">
           {filteredFiles.map((file) => (
             <div
               key={file.id}
               onClick={() => handleDocumentClick(file.id)} // Add click handler
-              className="border p-4 text-center truncate max-w-[300px] justify-self-center self-start ml-24 cursor-pointer"
+              className="border p-4 text-center truncate max-w-[300px] justify-self-center self-start cursor-pointer"
             >
               <div className="relative overflow-hidden w-[250px] h-[350px] border border-black transition-all duration-300 hover:border-homeLightBlueBG hover:shadow-lg">
                 <Document
