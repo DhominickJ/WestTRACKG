@@ -71,12 +71,19 @@ function Header({ onSearch }: { onSearch: (query: string) => void }) {
                 height={40}
                 className="ml-5"
               />
-              <h1 className="ml-8 mt-1 font-[Mayor] text-[hsl(var(--primary-color))] text-[22px]">
+              {/* <h1 className="ml-8 mt-1 font-[Mayor] text-[hsl(var(--primary-color))] text-[22px]">
                 West
               </h1>
               <h1 className="ml-0 mt-1 font-[Mayor] text-[hsl(var(--accent-color))] text-[22px]">
                 Track
-              </h1>
+              </h1> */}
+              <Image
+                src={"/images/logo_name.png"}
+                alt="logo_name"
+                width={100}
+                height={10}
+                className="ml-2"
+              />
             </div>
           </Link>
 
