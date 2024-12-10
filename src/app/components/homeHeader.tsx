@@ -155,7 +155,9 @@ function Header({ onSearch }: { onSearch: (query: string) => void }) {
                         }}
                         id={`notification-${doc.id}`}
                       >
-                        <p className="font-medium">{doc.title}</p>
+                        <a href={`/users/document/${doc.id}`}>
+                          <p className="font-medium">{doc.title}</p>
+                        </a>
                         <div className="flex flex-row items-center justify-around">
                           <p className="text-sm text-gray-600">
                             ⌛ Last Update: {doc.time}
