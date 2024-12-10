@@ -13,9 +13,8 @@ export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     console.log("Google User Signed IN: ", result.user);
-    alert(`Welcome User: ${result.user.displayName}`);
     return {
-      accessToken: result.user.getIdToken,
+      accessToken: await result.user.getIdToken(),
       photoUrl: result.user.photoURL,
       userName: result.user.displayName,
     };
