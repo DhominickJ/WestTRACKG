@@ -39,6 +39,7 @@ function DocumentContent() {
     return () => unsubscribe();
   }, []);
   const userName = user?.displayName || user?.email;
+  console.log(user);
 
   // Ref to prevent repeated state updates
   const isUpdating = useRef(false);
