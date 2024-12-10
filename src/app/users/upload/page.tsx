@@ -65,11 +65,11 @@ export default function UploadPage() {
 
     try {
       await addDoc(collection(db, "processing"), {
-        userId: userId, // Clerk's authenticated userId
+        userId: userId,
         fileName: fileName,
         fileType: "application/pdf",
         fileContent: base64Data,
-        status: "processed",
+        status: "processing",
         createdAt: new Date(),
       });
 

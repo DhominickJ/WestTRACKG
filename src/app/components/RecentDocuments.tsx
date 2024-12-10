@@ -28,6 +28,22 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
+  const [visibleFiles, setVisibleFiles] = useState<number[]>([]);
+
+  useEffect(() => {
+    files.forEach((_, index) => {
+      setTimeout(() => {
+        setVisibleFiles((prev) => [...prev, index]);
+      }, index * 300);
+    });
+  }, [files]);
+
+  // // Apply visibility in the mapped files
+  // filteredFiles.map((file, index) => (
+
+  //     {/* existing content */}
+  //   </div>
+  // ));
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -93,11 +109,13 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
         <p>Loading files...</p>
       ) : filteredFiles.length > 0 ? (
         <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-10 w-full max-w-screen-lg mx-auto">
-          {filteredFiles.map((file) => (
+          {filteredFiles.map((file, index) => (
             <div
               key={file.id}
-              onClick={() => handleDocumentClick(file.id)} // Add click handler
-              className="border p-4 text-center truncate max-w-[300px] justify-self-center self-start cursor-pointer"
+              onClick={() => handleDocumentClick(file.id)}
+              className={`border p-4 text-center truncate max-w-[300px] justify-self-center self-start cursor-pointer transition-opacity duration-500 ${
+                visibleFiles.includes(index) ? "opacity-100" : "opacity-0"
+              }`}
             >
               <div className="relative overflow-hidden w-[250px] h-[350px] border border-black transition-all duration-300 hover:border-homeLightBlueBG hover:shadow-lg">
                 <Document
