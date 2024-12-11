@@ -13,9 +13,8 @@ export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     console.log("Google User Signed IN: ", result.user);
-    alert(`Welcome User: ${result.user.displayName}`);
     return {
-      accessToken: result.user.getIdToken,
+      accessToken: await result.user.getIdToken(),
       photoUrl: result.user.photoURL,
       userName: result.user.displayName,
     };
@@ -37,5 +36,20 @@ export const signInWithEmail = async ({
     };
   } catch (error) {
     console.error(error);
+  }
+};
+export const signOut = async () => {
+  try {
+    await auth.signOut();
+    console.log("User signed out!");
+    if (window.confirm("Are you sure you want to sign out?")) {
+      await auth.signOut();
+      console.log("User signed out!");
+      alert("You have successfully signed out.");
+    } else {
+      console.log("Sign out cancelled.");
+    }
+  } catch (error) {
+    console.error("Error signing out: ", error);
   }
 };

@@ -3,42 +3,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import Header from "@/app/components/homeHeader";
 import ViewProcessingFilesPage from "@/app/components/RecentDocuments";
 import ViewFinishedFilesPage from "@/app/components/CheckedDocuments";
 import InteractiveButton from "@/app/components/homeButton";
-import Image from 'next/image';
+import Image from "next/image";
 import Link from "next/link";
 import AnnouncementList from "@/app/components/announcement";
 import PdfTemplates from "@/app/components/pdfTemplates";
 
 function RecentDocuments() {
+  return (
+    <div>
+      <h1 className="font-bold opacity-[0.70] text-[12px]">Processing</h1>
 
-  return <div>
+      {/* get user files from processing in db */}
+      <ViewProcessingFilesPage searchQuery={""} />
 
-    <h1 className="font-bold opacity-[0.70] text-[12px]">Processing</h1>
-
-    {/* get user files from processing in db */}
-    <ViewProcessingFilesPage searchQuery={""} />
-    
-    <h1 className="font-bold opacity-[0.70] text-[12px] mt-2">Finished</h1>
-    {/* get user files from finished in db */}
-    <ViewFinishedFilesPage searchQuery={""} />
-  </div>;
+      <h1 className="font-bold opacity-[0.70] text-[12px] mt-2">Finished</h1>
+      {/* get user files from finished in db */}
+      <ViewFinishedFilesPage searchQuery={""} />
+    </div>
+  );
 }
 
 function Announcements() {
   return (
     <>
-    <AnnouncementList /></>
+      <AnnouncementList />
+    </>
   );
 }
 
 function downloadPdf(fileName: string) {
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = fileName;
-  link.download = fileName.split('/').pop() || 'default-filename'; // Extracts the filename from the path
+  link.download = fileName.split("/").pop() || "default-filename"; // Extracts the filename from the path
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

@@ -1,13 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-// import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { CustomGoogleOneTap } from "@/app/components/CustomGoogleOneTap";
 import { auth } from "@/lib/firebase";
 import { signInWithGoogle } from "@/app/api/signin-auth";
 import { signInWithEmail } from "@/app/api/signin-auth";
-import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+
 
 function SignInPage() {
   // const { isLoaded, signIn, setActive } = useSignIn();
@@ -16,28 +15,6 @@ function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // // Handle form submission
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!isLoaded) return;
-
-  //   try {
-  //     const signInAttempt = await signIn.create({
-  //       identifier: email,
-  //       password,
-  //     });
-
-  //     if (signInAttempt.status === "complete") {
-  //       await setActive({ session: signInAttempt.createdSessionId });
-  //       router.push("/users/home"); // Redirect to the home page or dashboard
-  //     } else {
-  //       console.error("Additional steps required:", signInAttempt);
-  //     }
-  //   } catch (err: any) {
-  //     setError(err?.errors?.[0]?.message || "An unexpected error occurred.");
-  //   }
-  // };
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       try {
@@ -137,9 +114,10 @@ function SignInPage() {
           <div className="mt-6">
             <button
               onClick={signInWithGoogle}
-              className="w-full bg-yellow-500 text-white font-semibold py-2 rounded shadow-lg transition duration-300 hover:bg-yellow-600 flex items-center justify-center"
+              className="w-full bg-white text-black font-semibold py-2 rounded shadow-lg transition duration-300 
+              hover:bg-yellow-500 flex items-center justify-center"
             >
-              <FaGoogle width={20} height={20} className="mr-2" />
+              <FcGoogle className="mr-2" size={20} />
               Sign in with Google
             </button>
           </div>

@@ -57,7 +57,7 @@ export default function Home() {
           backgroundColor: "#133683",
           color: "#ffffff",
           padding: "10rem",
-          // height: "700px",
+          height: "700px",
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
@@ -79,6 +79,7 @@ export default function Home() {
         </p>
         <div
           style={{
+            height: "700px",
             display: "flex",
             justifyContent: "center",
             gap: "2rem",
@@ -144,7 +145,7 @@ export default function Home() {
       {/* Testimonial Section */}
       <div
         style={{
-          maxHeight: "700px",
+          height: "700px",
           backgroundColor: "#f9f9f9",
           padding: "2rem 1rem",
           textAlign: "center",
@@ -156,6 +157,7 @@ export default function Home() {
             marginBottom: "1rem",
             fontSize: "2rem",
             fontWeight: "bold",
+            marginTop: "20px",
           }}
         >
           What Users Think
@@ -167,9 +169,12 @@ export default function Home() {
         <div
           className="flex flex-col items-center justify-center"
           style={{
-            maxWidth: "800px",
+            maxWidth: "900px",
+            height: "500px",
             margin: "0 auto",
             padding: "1.5rem",
+
+            gap: "0.5rem",
             border: "1px solid #e0e0e0",
             borderRadius: "8px",
             backgroundColor: "#ffffff",
@@ -200,7 +205,7 @@ export default function Home() {
           >
             ★★★★★
           </div>
-          <p style={{ fontSize: "1rem", lineHeight: "1.5" }}>
+          <p style={{ fontSize: "1rem", lineHeight: "2" }}>
             I've never been a fan of paperwork, but with WestTrack, it's like a
             breath of fresh air! The whole process is faster than my morning
             coffee, and the real-time updates keep me in the loop. No more
@@ -211,39 +216,25 @@ export default function Home() {
         </div>
       </div>
 
-      {/* About Section */}
+      {/* About Section
       <div
         style={{
-          maxHeight: "700px",
+          height: "700px",
+          padding: "2rem 1rem",
           backgroundColor: "#FFD700",
-          padding: "3rem 1rem",
           textAlign: "center",
         }}
       >
-        <h2
-          style={{
-            fontWeight: "bold",
-            marginBottom: "1.5rem",
-            fontSize: "2rem",
-            color: "#133683",
-          }}
-        >
-          About WESTTRACK
-        </h2>
-        <p
-          style={{
-            maxWidth: "800px",
-            margin: "0 auto",
-            marginBottom: "2rem",
-            lineHeight: "1.5",
-          }}
-        >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. t enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
-        </p>
-      </div>
+        <h2 className="text-2xl font-bold mb-4">About WESTTRACK</h2>
+        <p className="text-black text-base leading-relaxed max-w-3xl mx-auto">
+          WestTrack is a Transaction Processing System developed for West Visayas State University. 
+          Many students experience long wait times, sometimes taking hours or even days, to have 
+          their documents signed by specific departments. 
+
+          WestTrack is designed to tackle the common challenges students face when accessing 
+          official documents. It significantly reduces processing times and enhances transaction 
+          speeds while providing real-time status updates, transparency, and ease of access.</p>
+      </div> */}
 
       {/* Team Section */}
       {/* <TeamSection /> */}

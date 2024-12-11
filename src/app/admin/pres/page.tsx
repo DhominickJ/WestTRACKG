@@ -148,7 +148,7 @@ const Files = () => {
                       className="border-b border-gray-300 text-[16px]"
                     >
                       <td className="border border-gray-300 px-4 py-2">
-                        <a href={`/users/document/${file.id}`}>
+                        <a href={`/users/document?fileId=${file.id}`}>
                           {file.fileName}
                         </a>
                       </td>

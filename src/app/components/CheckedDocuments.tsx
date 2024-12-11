@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { useAuth } from "@clerk/nextjs";
 import { Document, Page, pdfjs } from "react-pdf";
+import { auth } from "@/lib/firebase";
 
 // Import required styles for annotation and text layers
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -25,14 +25,14 @@ interface PdfViewerProps {
 }
 
 export default function PdfViewer({ searchQuery }: PdfViewerProps) {
-  const { userId: clerkUserId, isLoaded } = useAuth();
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter(); // Initialize the useRouter hook
 
   useEffect(() => {
     const fetchFiles = async () => {
-      if (!clerkUserId || !isLoaded) {
+      const userId = auth.currentUser;
+      if (!userId) {
         setFiles([]);
         setLoading(false);
         return;
@@ -43,7 +43,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
       try {
         const q = query(
           collection(db, "finished"),
-          where("userId", "==", clerkUserId)
+          where("userId", "==", userId.uid)
         );
         const querySnapshot = await getDocs(q);
 
@@ -65,7 +65,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
     };
 
     fetchFiles();
-  }, [clerkUserId, isLoaded]);
+  }, []);
 
   // Filter files based on the search query
   const filteredFiles = files.filter((file) =>

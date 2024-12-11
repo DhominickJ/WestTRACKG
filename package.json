@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.5.0",
+    "@ilovepdf/ilovepdf-nodejs": "^0.3.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@types/dotenv": "^8.2.3",
+    "@types/jest": "^29.5.14",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
     "embla-carousel-react": "^8.5.1",
+    "fabric": "^6.5.3",
     "firebase": "^11.0.2",
     "init": "^0.1.2",
     "lucide-react": "^0.464.0",

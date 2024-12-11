@@ -1,174 +1,115 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  addDoc,
-} from "firebase/firestore";
-import { db, auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import {
-  useFetchFiles,
-  showFileStatus,
-  downloadFile,
-} from "@/app/api/fileOperations";
+import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { User } from "firebase/auth";
+import Image from "next/image";
 
-interface File {
-  id: string;
-  fileName: string;
-  status: string;
-  fileContent: string;
-  transactionInfo?: {
-    claimedBy: string;
-    claimedAt: string;
-  };
-  userId: string;
-}
+// // Extend the User type to include the office property
+// declare module "firebase/auth" {
+//   interface User {
+//     office?: string;
+//   }
+// }
 
-const Admin = () => {
-  const [files, setFiles] = useState<File[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
+const AdminPage = () => {
+  const router = useRouter();
 
+  const [user, setUser] = useState<User | null>(null);
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (!userId) {
-        setIsAdmin(false);
-        return;
+    const checkAdmin = async () => {
+      if (auth) {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+          return setUser(user);
+        });
+
+        return () => unsubscribe();
       }
 
       try {
+        if (!user) {
+          console.log(user);
+          return;
+        }
+
+        const db = getFirestore();
         const adminCollection = collection(db, "admin");
         const adminSnapshot = await getDocs(adminCollection);
-        const isAdminUser = adminSnapshot.docs.some((doc) => doc.id === userId);
-        setIsAdmin(isAdminUser);
-        console.log(isAdminUser);
+        const adminList = adminSnapshot.docs.map((doc) => doc.data());
+        const isAdmin = adminList.some((admin) => admin.userId === user.uid);
+
+        if (!isAdmin) {
+          router.push("/not-authorized");
+          return;
+        }
       } catch (error) {
-        console.error("Error checking admin status: ", error);
-        setIsAdmin(false);
+        console.error("Error checking admin status:", error);
       }
     };
 
-    checkAdminStatus();
-  }, [userId]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUserId(user.uid);
-      } else {
-        setIsAdmin(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const fetchFiles = async () => {
-      if (!isAdmin) return;
-      setLoading(true);
+    checkAdmin();
+    // console.log(user);
+    const getUserOffice = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "processing"));
-        const fetchedFiles = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            fileName: data.fileName || "",
-            status: data.status || "",
-            base64: data.base64 || "",
-            fileContent: data.fileContent || "",
-            transactionInfo: data.transactionInfo || {
-              claimedBy: "",
-              claimedAt: "",
-            },
-            userId: data.userId ?? "",
-          };
-        });
-        setFiles(fetchedFiles);
+        if (!user) {
+          return;
+        }
+
+        const db = getFirestore();
+        const userDoc = await getDocs(collection(db, "admin"));
+        const userData = userDoc.docs
+          .find((doc) => doc.id === user.uid)
+          ?.data();
+
+        if (userData && userData.office) {
+          switch (userData.office) {
+            case "vpaa":
+              router.push("/admin/vpaa");
+              break;
+            case "osa":
+              router.push("/admin/osa");
+              break;
+            case "pres":
+              router.push("/admin/pres");
+              break;
+            default:
+              router.push("/");
+              break;
+          }
+        } else {
+          router.push("/");
+        }
       } catch (error) {
-        console.error("Error fetching files:", error);
-      } finally {
-        setLoading(false);
+        console.error("Error getting user office:", error);
       }
     };
 
-    fetchFiles();
-  }, [isAdmin]);
-
-  const updateFileStatus = async (fileId: string, newStatus: string) => {
-    try {
-      const fileRef = doc(db, "processing", fileId);
-      const updatedData: Partial<File> = { status: newStatus };
-
-      // If the status is "claimed," remove the PDF content
-      if (newStatus === "claimed") {
-        updatedData.fileContent = ""; // Remove the Base64 content
-        updatedData.transactionInfo = {
-          claimedBy: auth.currentUser?.email || "Admin",
-          claimedAt: new Date().toISOString(),
-        };
-        await updateDoc(fileRef, updatedData);
-        await addDoc(collection(db, "finished"), {
-          // Add to the finished transaction collection
-          fileId: fileId,
-          claimedBy: auth.currentUser?.email || "Admin",
-          claimedAt: new Date().toISOString(),
-        });
-      }
-      // Create another update on the file itself to reflect on the database
-
-      // Update the state to reflect the changes
-      setFiles((prevFiles) =>
-        prevFiles.map((file) =>
-          file.id === fileId ? { ...file, ...updatedData } : file
-        )
-      );
-
-      alert(`File status updated to: ${newStatus}`);
-    } catch (error) {
-      console.error("Error updating file status:", error);
-      alert("Failed to update file status. Please try again.");
-    }
-  };
+    getUserOffice();
+  }, [router, user]);
 
   return (
-    <div>
-      <h1>Admin Dashboard</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {files.map((file) => (
-            <li key={file.id}>
-              <strong>{file.fileName}</strong> (Status: {file.status})
-              <button onClick={() => downloadFile(file)}>Download</button>
-              <button onClick={() => showFileStatus(file.status)}>
-                Show Status
-              </button>
-              <select
-                title="File Selector"
-                onChange={(e) => updateFileStatus(file.id, e.target.value)}
-                defaultValue="Select Status"
-                name="fileUpdater"
-              >
-                <option value="" disabled>
-                  Change Status
-                </option>
-                <option value="processing">Processing</option>
-                <option value="finished">Finished</option>
-                <option value="conflict">Conflict</option>
-                <option value="claimed">Claimed</option>
-              </select>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="text-center">
+        <Image 
+          src="/Graphics/icon.svg"
+          alt="Logo"
+          width={100}
+          height={100}
+          className="justify-self-center"
+        />
+         <Image 
+          src="/Graphics/WestTrack Tertiary Logo.svg"
+          alt="Logo"
+          width={100}
+          height={100}
+          className="justify-self-center mt-1"
+        />
+        <h1 className="text-[96px] font-bold text-homeLightBlueBG"> Welcome, <span className="text-yellow-500">Admin! </span></h1>
+        <p>Redirecting you to your Office...</p>
+      </div>
     </div>
   );
 };
 
-export default Admin;
+export default AdminPage;

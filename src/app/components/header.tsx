@@ -7,19 +7,33 @@ import {
   UserCircle,
 } from "lucide-react";
 import Image from "next/image";
-//import NotificationPopup from "./components/notificationPopup";
+import { useState, useEffect } from 'react';
 
 function Header() {
-  //const notifications = [
-  //  { id: 1, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
-  //  { id: 2, text: "Your Requested Document #000759 has now been approved", time: "05:32 PM" },
-  //   { id: 3, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
-  //   { id: 4, text: "Your Requested Document #000389 has now been approved", time: "08:32 AM" },
-  //];
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 50) {
+        setIsVisible(false); // Hide header on scroll down
+      } else {
+        setIsVisible(true); // Show header on scroll up
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
 
   return (
-    <header className="sticky top-0 z-50">
-      <div className="nav-wrapper h-20 z-10">
+    <header
+    className={`sticky top-0 z-50 transition-transform duration-100 ${
+      isVisible ? 'translate-y-0' : '-translate-y-full'
+    }`}>
+      <div className="nav-wrapper z-10">
         <nav className="flex flex-wrap align-middle justify-between p-4 text-white bg-[#0b5ca6]">
           <div className="brand-logo left">
             <Image
@@ -31,27 +45,13 @@ function Header() {
             />
           </div>
           <ul className="left hide-on-med-and-down flex">
-            <li className="mr-5">
-              <a href="/users/upload">
-                <UploadCloud size={32} />
-              </a>
-            </li>
-            <li className="mr-5">
-              <a href="/users/files">
-                <FilesIcon size={32} />
-              </a>
-            </li>
-            <li className="mr-5">
-              <a href="/users/home">
-                <HomeIcon size={32} />
-              </a>
-            </li>
-            <li className="mr-5">
-              <a href="/sign-in">
+            <li className="w-[100px] mr-10 flex items-center">
+              <a href="/sign-in" className="flex items-center space-x-3">
                 <UserCircle size={32} />
+                <span>Sign in</span>
               </a>
             </li>
-          </ul>
+          </ul>          
         </nav>
       </div>
     </header>

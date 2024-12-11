@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { useAuth } from "@clerk/nextjs";
+import { db, auth } from "@/lib/firebase";
 import { Document, Page, pdfjs } from "react-pdf";
 
 // Import required styles for annotation and text layers
@@ -25,14 +24,42 @@ interface PdfViewerProps {
 }
 
 export default function PdfViewer({ searchQuery }: PdfViewerProps) {
-  const { userId: clerkUserId, isLoaded } = useAuth();
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter(); // Initialize the useRouter hook
+  const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
+  const [visibleFiles, setVisibleFiles] = useState<number[]>([]);
+
+  useEffect(() => {
+    files.forEach((_, index) => {
+      setTimeout(() => {
+        setVisibleFiles((prev) => [...prev, index]);
+      }, index * 300);
+    });
+  }, [files]);
+
+  // // Apply visibility in the mapped files
+  // filteredFiles.map((file, index) => (
+
+  //     {/* existing content */}
+  //   </div>
+  // ));
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchFiles = async () => {
-      if (!clerkUserId || !isLoaded) {
+      if (!userId) {
         setFiles([]);
         setLoading(false);
         return;
@@ -43,7 +70,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
       try {
         const q = query(
           collection(db, "processing"),
-          where("userId", "==", clerkUserId)
+          where("userId", "==", userId)
         );
         const querySnapshot = await getDocs(q);
 
@@ -52,7 +79,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
           return {
             id: doc.id,
             fileName: data.fileName,
-            fileContent: data.fileContent, // Base64 string from Firestore
+            fileContent: data.fileContent,
           };
         });
 
@@ -65,7 +92,7 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
     };
 
     fetchFiles();
-  }, [clerkUserId, isLoaded]);
+  }, [userId]);
 
   // Filter files based on the search query
   const filteredFiles = files.filter((file) =>
@@ -73,7 +100,6 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
   );
 
   const handleDocumentClick = (fileId: string) => {
-    // Navigate to the document view page with the file ID
     router.push(`/users/document/${fileId}`);
   };
 
@@ -82,12 +108,14 @@ export default function PdfViewer({ searchQuery }: PdfViewerProps) {
       {loading ? (
         <p>Loading files...</p>
       ) : filteredFiles.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
-          {filteredFiles.map((file) => (
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-5 gap-x-10 w-full max-w-screen-lg mx-auto">
+          {filteredFiles.map((file, index) => (
             <div
               key={file.id}
-              onClick={() => handleDocumentClick(file.id)} // Add click handler
-              className="border p-4 text-center truncate max-w-[300px] justify-self-center self-start ml-24 cursor-pointer"
+              onClick={() => handleDocumentClick(file.id)}
+              className={`border p-4 text-center truncate max-w-[300px] justify-self-center self-start cursor-pointer transition-opacity duration-500 ${
+                visibleFiles.includes(index) ? "opacity-100" : "opacity-0"
+              }`}
             >
               <div className="relative overflow-hidden w-[250px] h-[350px] border border-black transition-all duration-300 hover:border-homeLightBlueBG hover:shadow-lg">
                 <Document

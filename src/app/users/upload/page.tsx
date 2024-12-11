@@ -1,9 +1,9 @@
 "use client";
+import React from "react";
 import { useState } from "react";
 import { db } from "@/lib/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-// import { useAuth } from "@clerk/nextjs";
 import { CloudUpload, UploadIcon, Trash2Icon } from "lucide-react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -26,6 +26,7 @@ export default function UploadPage() {
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [officeConcerned, setOfficeConcerned] = useState<string | null>(null);
 
   interface Base64Data {
     base64Data: string;
@@ -66,12 +67,13 @@ export default function UploadPage() {
 
     try {
       await addDoc(collection(db, "processing"), {
-        userId: userId, // Clerk's authenticated userId
+        userId: userId,
         fileName: fileName,
         fileType: "application/pdf",
         fileContent: base64Data,
-        status: "processed",
+        status: "processing",
         createdAt: new Date(),
+        officeConcerned: officeConcerned,
       });
 
       alert("File Uploaded Successfully!");
@@ -156,6 +158,28 @@ export default function UploadPage() {
           onChange={handleFileChange}
           className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-500 ease-in-out transform hover:scale-105"
         />
+        <div>
+          <label
+            htmlFor="officeConcerned"
+            className="text-sm font-medium text-white flex"
+          >
+            Select Office:
+          </label>
+          <select
+            id="officeConcerned"
+            title="Select Office"
+            value={officeConcerned || ""}
+            onChange={(e) => setOfficeConcerned(e.target.value)}
+            className="text-black block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-500 ease-in-out transform hover:scale-105"
+          >
+            <option value="" disabled>
+              Select Office
+            </option>
+            <option value="vpaa">VPAA</option>
+            <option value="daa">DAA</option>
+            <option value="osa">OSA</option>
+          </select>
+        </div>
         {fileName && (
           <>
             <p className="mt-2 text-sm text-white">Stored File: {fileName}</p>
