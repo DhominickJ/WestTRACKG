@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db, auth } from "@/lib/firebase";
 import Header from "@/app/components/homeHeader";
 import Image from "next/image";
@@ -36,13 +44,18 @@ function Announcements() {
   );
 }
 
-
 interface File {
   id: string;
   fileName: string;
   status: string;
   date: Date; // Converted from Firestore Timestamp
   time: Date; // Converted from Firestore Timestamp
+  officeConcerned: string;
+  fileContent?: string; // Add this line
+  transactionInfo?: {
+    claimedBy: string;
+    claimedAt: string;
+  };
 }
 
 const Files = () => {
@@ -76,19 +89,23 @@ const Files = () => {
       try {
         const q = query(
           collection(db, "processing"),
-          where("userId", "==", userId) // Only files owned by the user are accessed
+          where("officeConcerned", "==", "daa"),
+          where("officeConcerned", "!=", "")
         );
         const querySnapshot = await getDocs(q);
-        const fileData: File[] = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            fileName: data.fileName || "Unknown File",
-            status: data.status || "Unknown Status",
-            date: data.date?.toDate() || new Date(),
-            time: data.time?.toDate() || new Date(),
-          };
-        });
+        const fileData: File[] = querySnapshot.docs
+          .map((doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              fileName: data.fileName || "Unknown File",
+              status: data.status || "Unknown Status",
+              date: data.date?.toDate() || new Date(),
+              time: data.time?.toDate() || new Date(),
+              officeConcerned: data.officeConcerned,
+            };
+          })
+          .filter((file) => file.officeConcerned === "daa");
         setFiles(fileData);
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -104,6 +121,42 @@ const Files = () => {
     fetchFiles();
   }, [userId]);
 
+  const updateFileStatus = async (fileId: string, newStatus: string) => {
+    try {
+      const fileRef = doc(db, "processing", fileId);
+      const updatedData: Partial<File> = { status: newStatus };
+
+      // If the status is "claimed," remove the PDF content
+      if (newStatus === "claimed") {
+        updatedData.fileContent = ""; // Remove the Base64 content
+        updatedData.transactionInfo = {
+          claimedBy: auth.currentUser?.email || "Admin",
+          claimedAt: new Date().toISOString(),
+        };
+        await updateDoc(fileRef, updatedData);
+        await addDoc(collection(db, "finished"), {
+          // Add to the finished transaction collection
+          fileId: fileId,
+          claimedBy: auth.currentUser?.email || "Admin",
+          claimedAt: new Date().toISOString(),
+        });
+      }
+      // Create another update on the file itself to reflect on the database
+
+      // Update the state to reflect the changes
+      setFiles((prevFiles) =>
+        prevFiles.map((file) =>
+          file.id === fileId ? { ...file, ...updatedData } : file
+        )
+      );
+
+      alert(`File status updated to: ${newStatus}`);
+    } catch (error) {
+      console.error("Error updating file status:", error);
+      alert("Failed to update file status. Please try again.");
+    }
+  };
+
   return (
     <>
       <Header
@@ -112,9 +165,9 @@ const Files = () => {
           try {
             const q = query(
               collection(db, "processing"),
-              where("userId", "==", userId),
               where("fileName", ">=", searchQuery),
-              where("fileName", "<=", searchQuery + "\uf8ff")
+              where("fileName", "<=", searchQuery + "\uf8ff"),
+              where("officeConcerned", "==", "daa")
             );
             const querySnapshot = await getDocs(q);
             const fileData: File[] = querySnapshot.docs.map((doc) => {
@@ -125,6 +178,7 @@ const Files = () => {
                 status: data.status || "Unknown Status",
                 date: data.date?.toDate() || new Date(),
                 time: data.time?.toDate() || new Date(),
+                officeConcerned: data.officeConcerned || "Unknown Office",
               };
             });
             setFiles(fileData);
@@ -144,59 +198,15 @@ const Files = () => {
         <h1 className="text-[24px] font-normal text-westTrackWhite text-opacity-50">
           Welcome,
         </h1>
-        <h1 className="text-[72px] font-bold text-westTrackWhite" style={{ opacity: 1 }}>
-          Director For Academic Affairs
+        <h1
+          className="text-[72px] font-bold text-westTrackWhite"
+          style={{ opacity: 1 }}
+        >
+          Department Academic Agency
         </h1>
       </div>
-
-      <div className="flex pl-12 pt-8 items-center">
-        <div className="flex space-x-4">
-          <InteractiveButton
-            text="Recent Documents"
-            isActive={activeButton === "Recent Documents"}
-            onClick={() => setActiveButton("Recent Documents")}
-          />
-          <InteractiveButton
-            text="Announcements"
-            isActive={activeButton === "Announcements"}
-            onClick={() => setActiveButton("Announcements")}
-          />
-        </div>
-        <Link href="/users/files" className="ml-auto mr-10">
-          <Image
-            src={"/images/Folder.svg"}
-            alt={"Folder Icon"}
-            width={30}
-            height={30}
-            className="cursor-pointer"
-          />
-        </Link>
-      </div>
-
-      <div className="p-8 ml-5">
-        {activeButton === "Recent Documents" && (
-          <div>
-            <h1 className="font-bold opacity-[0.70] text-[12px]">Processing</h1>
-            <ViewProcessingFilesPage searchQuery={searchQuery} />
-            <h1 className="font-bold opacity-[0.70] text-[12px] mt-2">
-              Finished
-            </h1>
-            <ViewFinishedFilesPage searchQuery={searchQuery} />
-          </div>
-        )}
-        {activeButton === "Announcements" && <AnnouncementComponent />}
-      </div>
-      {/* <div className="m-12">
-        <Link href="/users/home">
-          <Image
-            alt="back"
-            src="/images/back.svg"
-            width={200}
-            height={200}
-            className="cursor-pointer mb-5"
-          />
-        </Link>
-        <h1 className="text-[42px] font-bold mb-8">📁 Your Files</h1>
+      <div className="m-12">
+        <h1 className="text-[42px] font-bold mb-8">📁 Review Files</h1>
         {loading ? (
           <p>Loading...</p>
         ) : userId ? (
@@ -237,7 +247,22 @@ const Files = () => {
                         {file.time.toLocaleTimeString()}
                       </td>
                       <td className="border border-gray-300 px-4 py-2">
-                        {file.status}
+                        <select
+                          title="File Selector"
+                          onChange={(e) =>
+                            updateFileStatus(file.id, e.target.value)
+                          }
+                          defaultValue="Select Status"
+                          name="fileUpdater"
+                        >
+                          <option value="" disabled>
+                            Change Status
+                          </option>
+                          <option value="processing">Processing</option>
+                          <option value="finished">Finished</option>
+                          <option value="conflict">Conflict</option>
+                          <option value="claimed">Claimed</option>
+                        </select>
                       </td>
                     </tr>
                   ))}
@@ -250,7 +275,7 @@ const Files = () => {
         ) : (
           <p>Please log in to view your files.</p>
         )}
-      </div> */}
+      </div>
     </>
   );
 };
