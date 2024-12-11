@@ -23,32 +23,56 @@ export default function Home() {
       <RequestBtn
         text="Request a Document"
         isActive={true}
-        redirectTo="/app/sign-in" // The URL to navigate to
+        redirectTo={"/sign-in"} // The URL to navigate to
       />
       <LandingSection />
-      
+
       {/* Features Section */}
-      <ContentLoader
-        header="Fast and Reliable"
-        content="Every request goes through a seamless process, giving you updates in real-time – no more endless waiting."
-        imgSrc="/icons/paper_fast.png"
-        imgPos="right"
-        bgColor="white"
-      />
-      <ContentLoader
-        header="Effortless Experience"
-        content="Our system guides your requests from start to finish with clarity and ease – making the process straightforward and stress-free."
-        imgSrc="/icons/easy.svg"
-        imgPos="left"
-        bgColor="[#0b5ca6]"
-      />
-      <ContentLoader
-        header="Protected at Every Step"
-        content="We prioritize your privacy with comprehensive encryption and strict data handling standards."
-        imgSrc="/icons/secure.png"
-        imgPos="right"
-        bgColor="white"
-      />
+      <div
+        className="fadeIn"
+        tabIndex={0}
+        onFocus={() =>
+          document.querySelector(".fadeIn").classList.add("fadeIn")
+        }
+      >
+        <ContentLoader
+          header="Fast and Reliable"
+          content="Every request goes through a seamless process, giving you updates in real-time – no more endless waiting."
+          imgSrc="/icons/paper_fast.png"
+          imgPos="right"
+          bgColor="white"
+        />
+      </div>
+      <div
+        className="fadeIn"
+        tabIndex={0}
+        onFocus={() =>
+          document.querySelector(".fadeIn").classList.add("fadeIn")
+        }
+      >
+        <ContentLoader
+          header="Effortless Experience"
+          content="Our system guides your requests from start to finish with clarity and ease – making the process straightforward and stress-free."
+          imgSrc="/icons/easy.svg"
+          imgPos="left"
+          bgColor="[#0b5ca6]"
+        />
+      </div>
+      <div
+        className="fadeIn"
+        tabIndex={0}
+        onFocus={() =>
+          document.querySelector(".fadeIn").classList.add("fadeIn")
+        }
+      >
+        <ContentLoader
+          header="Protected at Every Step"
+          content="We prioritize your privacy with comprehensive encryption and strict data handling standards."
+          imgSrc="/icons/secure.png"
+          imgPos="right"
+          bgColor="white"
+        />
+      </div>
 
       {/* Trusted Offices Section */}
       <div
@@ -173,7 +197,7 @@ export default function Home() {
             height: "500px",
             margin: "0 auto",
             padding: "1.5rem",
-            
+
             gap: "0.5rem",
             border: "1px solid #e0e0e0",
             borderRadius: "8px",
