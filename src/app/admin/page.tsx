@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { User } from "firebase/auth";
+import Image from "next/image";
 
 // // Extend the User type to include the office property
 // declare module "firebase/auth" {
@@ -88,9 +89,25 @@ const AdminPage = () => {
   }, [router, user]);
 
   return (
-    <div>
-      <h1>Admin Page</h1>
-      <p>Loading...</p>
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="text-center">
+        <Image 
+          src="/Graphics/icon.svg"
+          alt="Logo"
+          width={100}
+          height={100}
+          className="justify-self-center"
+        />
+         <Image 
+          src="/Graphics/WestTrack Tertiary Logo.svg"
+          alt="Logo"
+          width={100}
+          height={100}
+          className="justify-self-center mt-1"
+        />
+        <h1 className="text-[96px] font-bold text-homeLightBlueBG"> Welcome, <span className="text-yellow-500">Admin! </span></h1>
+        <p>Redirecting you to your Office...</p>
+      </div>
     </div>
   );
 };
