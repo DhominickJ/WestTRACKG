@@ -7,6 +7,36 @@ import { db, auth } from "@/lib/firebase";
 import Header from "@/app/components/homeHeader";
 import Image from "next/image";
 import { onAuthStateChanged } from "firebase/auth";
+import InteractiveButton from "@/app/components/homeButton";
+import ViewProcessingFilesPage from "@/app/components/RecentDocuments";
+import ViewFinishedFilesPage from "@/app/components/CheckedDocuments";
+import AnnouncementComponent from "@/app/components/announcement";
+import AnnouncementList from "@/app/components/announcement";
+
+
+function RecentDocuments() {
+  return (
+    <div>
+      <h1 className="font-bold opacity-[0.70] text-[12px]">Processing</h1>
+
+      {/* get user files from processing in db */}
+      <ViewProcessingFilesPage searchQuery={""} />
+
+      <h1 className="font-bold opacity-[0.70] text-[12px] mt-2">Finished</h1>
+      {/* get user files from finished in db */}
+      <ViewFinishedFilesPage searchQuery={""} />
+    </div>
+  );
+}
+
+function Announcements() {
+  return (
+    <>
+      <AnnouncementList />
+    </>
+  );
+}
+
 
 interface File {
   id: string;
@@ -20,6 +50,8 @@ const Files = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeButton, setActiveButton] = useState<string>("Recent Documents");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -108,7 +140,54 @@ const Files = () => {
           }
         }}
       />
-      <div className="m-12">
+      <div className="justify-start h-[325px] w-full bg-homeLightBlueBG p-16 pl-[112px] pt-16 pb-0">
+        {/* Other elements */}
+        <h1 className="text-[24px] font-normal text-westTrackWhite text-opacity-50">
+          Welcome,
+        </h1>
+        <h1 className="text-[72px] font-bold text-westTrackWhite" style={{ opacity: 1 }}>
+          Office of the Student Affairs
+        </h1>
+      </div>
+
+      <div className="flex pl-12 pt-8 items-center">
+        <div className="flex space-x-4">
+          <InteractiveButton
+            text="Recent Documents"
+            isActive={activeButton === "Recent Documents"}
+            onClick={() => setActiveButton("Recent Documents")}
+          />
+          <InteractiveButton
+            text="Announcements"
+            isActive={activeButton === "Announcements"}
+            onClick={() => setActiveButton("Announcements")}
+          />
+        </div>
+        <Link href="/users/files" className="ml-auto mr-10">
+          <Image
+            src={"/images/Folder.svg"}
+            alt={"Folder Icon"}
+            width={30}
+            height={30}
+            className="cursor-pointer"
+          />
+        </Link>
+      </div>
+
+      <div className="p-8 ml-5">
+        {activeButton === "Recent Documents" && (
+          <div>
+            <h1 className="font-bold opacity-[0.70] text-[12px]">Processing</h1>
+            <ViewProcessingFilesPage searchQuery={searchQuery} />
+            <h1 className="font-bold opacity-[0.70] text-[12px] mt-2">
+              Finished
+            </h1>
+            <ViewFinishedFilesPage searchQuery={searchQuery} />
+          </div>
+        )}
+        {activeButton === "Announcements" && <AnnouncementComponent />}
+      </div>
+      {/* <div className="m-12">
         <Link href="/users/home">
           <Image
             alt="back"
@@ -148,7 +227,7 @@ const Files = () => {
                       className="border-b border-gray-300 text-[16px]"
                     >
                       <td className="border border-gray-300 px-4 py-2">
-                        <a href={`/users/document?fileId=${file.id}`}>
+                        <a href={`/admin/document?fileId=${file.id}`}>
                           {file.fileName}
                         </a>
                       </td>
@@ -172,7 +251,7 @@ const Files = () => {
         ) : (
           <p>Please log in to view your files.</p>
         )}
-      </div>
+      </div> */}
     </>
   );
 };
