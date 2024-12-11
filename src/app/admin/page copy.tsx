@@ -137,7 +137,7 @@ const Admin = () => {
 
   return (
     <div>
-      <h1>Admin Dashboard</h1>
+      <h1 className="text-[64px] align-middle justify-center items-center font-bold">Welcomr to the Admin Dashboard</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
