@@ -38,11 +38,17 @@ export const signInWithEmail = async ({
     console.error(error);
   }
 };
-
 export const signOut = async () => {
   try {
     await auth.signOut();
     console.log("User signed out!");
+    if (window.confirm("Are you sure you want to sign out?")) {
+      await auth.signOut();
+      console.log("User signed out!");
+      alert("You have successfully signed out.");
+    } else {
+      console.log("Sign out cancelled.");
+    }
   } catch (error) {
     console.error("Error signing out: ", error);
   }

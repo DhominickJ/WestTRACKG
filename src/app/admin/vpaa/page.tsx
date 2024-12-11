@@ -45,7 +45,8 @@ const Files = () => {
       try {
         const q = query(
           collection(db, "processing"),
-          where("userId", "==", userId) // Only files owned by the user are accessed
+          where("userId", "==", userId),
+          where("officeConcerned", "==", "vpaa")
         );
         const querySnapshot = await getDocs(q);
         const fileData: File[] = querySnapshot.docs.map((doc) => {

@@ -195,16 +195,6 @@ function Header({ onSearch }: { onSearch: (query: string) => void }) {
                     </button>
                     {dropdownOpen && (
                       <div className="dropdown-menu absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
-                        <Link href="/profile">
-                          <p className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Profile
-                          </p>
-                        </Link>
-                        <Link href="/settings">
-                          <p className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Settings
-                          </p>
-                        </Link>
                         <button
                           onClick={() => signOut()}
                           className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
